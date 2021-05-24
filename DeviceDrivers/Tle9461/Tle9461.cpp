@@ -4,7 +4,7 @@
  *  Created on: 5 gru 2020
  *      Author: Mati
  */
-#include "tle9461.h"
+#include "Tle9461.h"
 #include <stdlib.h>
 
 #define SPI_COMMAND_LEN       2
@@ -55,44 +55,49 @@
 #define FAM_PROD_STAT       0x7E
 #define TLE9461_SPI_MSG_LEN 2
 
-
-Tle9461::Tle9461(ISpi *spi) {
+Tle9461::Tle9461(ISpi *spi)
+{
     this->spi = spi;
     this->txBuf = (uint8_t *) malloc(SPI_COMMAND_LEN);
     this->rxBuf = (uint8_t *) malloc(SPI_COMMAND_LEN);
 }
 
-void Tle9461::Init() {
-//    uint8_t data;
-//    WriteRegister(M_S_CTRL,data);
+void Tle9461::Init()
+{
+    //    uint8_t data;
+    //    WriteRegister(M_S_CTRL,data);
 }
 
-Tle9461::~Tle9461() {
+Tle9461::~Tle9461()
+{
     free(this->rxBuf);
     free(this->txBuf);
 }
 
-void Tle9461::GetStatus(uint8_t data) {
+void Tle9461::GetStatus(uint8_t data)
+{
     status.R = data;
 }
 
-
-bool Tle9461::WriteRegister(uint8_t regAddr, uint8_t data) {
+bool Tle9461::WriteRegister(uint8_t regAddr, uint8_t data)
+{
     bool ret = false;
     txBuf[0] = SPI_REG_WRITE(regAddr);
     txBuf[1] = data;
-    if (spi->Transfer(this->txBuf, this->rxBuf, SPI_COMMAND_LEN)) {
+    if (spi->Transfer(this->txBuf, this->rxBuf, SPI_COMMAND_LEN))
+    {
         GetStatus(rxBuf[0]);
         ret = true;
     }
     return ret;
 }
 
-
-bool Tle9461::ReadRegister(uint8_t regAddr, uint8_t *data, bool clearFlag) {
+bool Tle9461::ReadRegister(uint8_t regAddr, uint8_t *data, bool clearFlag)
+{
     bool ret = false;
     txBuf[0] = clearFlag ? SPI_REG_READ(regAddr) : SPI_REG_READ_CLEAR(regAddr);
-    if (spi->Transfer(this->txBuf, this->rxBuf, SPI_COMMAND_LEN)) {
+    if (spi->Transfer(this->txBuf, this->rxBuf, SPI_COMMAND_LEN))
+    {
         GetStatus(rxBuf[0]);
         *data = rxBuf[1];
         ret = true;
@@ -100,6 +105,7 @@ bool Tle9461::ReadRegister(uint8_t regAddr, uint8_t *data, bool clearFlag) {
     return ret;
 }
 
-void Tle9461::RefreshWatchdog() {
+void Tle9461::RefreshWatchdog()
+{
     WriteRegister(WD_CTRL, wdReg);
 }

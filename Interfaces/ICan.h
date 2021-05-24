@@ -13,15 +13,15 @@
 
 class ICan
 {
-  public:
-    union Payload{
+public:
+    union Payload
+    {
         uint8_t b[8];
         uint16_t w[4];
         uint32_t dw[2];
     };
-    virtual bool Send(uint32_t id, Payload &data, uint8_t dlc)     = 0;
+    virtual bool Send(uint32_t id, Payload &data, uint8_t dlc) = 0;
     virtual bool Receive(uint32_t *id, Payload *data, uint8_t dlc) = 0;
 };
-
 
 #endif /* CDD_CAN_ABSTRACT_H_ */

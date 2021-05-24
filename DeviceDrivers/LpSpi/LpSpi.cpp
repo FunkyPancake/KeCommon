@@ -4,11 +4,11 @@
  *  Created on: 14 gru 2020
  *      Author: Mati
  */
-#include "lpspi.h"
+#include "LpSpi.h"
 
 bool LpSpiRtos::Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len)
 {
-    lpspi_transfer_t data = { tx_data, rx_data, len, kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous };
+    lpspi_transfer_t data = {tx_data, rx_data, len, kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous};
     return LPSPI_RTOS_Transfer(this->handle, &data) == kStatus_Success;
 }
 

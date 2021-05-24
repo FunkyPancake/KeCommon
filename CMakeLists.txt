@@ -6,23 +6,27 @@ project(KeCommon LANGUAGES CXX C)
 
 add_library(KeCommon
         device/system_MKE16F16.c
-        DeviceDrivers/flexcan/flexcan.cpp
         source/semihost_hardfault.c
         source/cpp_config.cpp
+        DeviceDrivers/FlexCan/FlexCan.cpp
+        DeviceDrivers/LpSpi/LpSpi.cpp
+        DeviceDrivers/Tle9461/Tle9461.cpp
         )
-
-add_subdirectory(drivers)
-add_subdirectory(freertos)
 
 target_include_directories(
         KeCommon
         PUBLIC
         Interfaces
-        DeviceDrivers/flexcan
         device
         CMSIS
         source
+        DeviceDrivers/FlexCan
+        DeviceDrivers/LpSpi
+        DeviceDrivers/Tle9461
 )
+
+add_subdirectory(drivers)
+add_subdirectory(freertos)
 
 target_compile_definitions(KeCommon
         PRIVATE
@@ -38,6 +42,6 @@ target_compile_definitions(KeCommon
         )
 
 target_compile_options(KeCommon PRIVATE
-        -O0 -fno-common -g3 -Wall -c -ffunction-sections -fno-rtti -fdata-sections -ffreestanding
+        -O0 -fno-common -g3 -Wall -c -ffunction-sections -fdata-sections -ffreestanding
         -fno-builtin -fno-exceptions -fmerge-constants -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
         -mthumb -fstack-usage -specs=nano.specs)

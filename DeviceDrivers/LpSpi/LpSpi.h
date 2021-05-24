@@ -13,12 +13,12 @@
 
 class LpSpiRtos : public ISpi
 {
-
-  private:
+private:
     lpspi_rtos_handle_t *handle;
     uint32_t flags;
-  public:
-    enum LpSpiFlags{
+public:
+    enum LpSpiFlags
+    {
         Pcs0 = kLPSPI_MasterPcs0,
         Pcs1 = kLPSPI_MasterPcs1,
         Pcs2 = kLPSPI_MasterPcs2,
