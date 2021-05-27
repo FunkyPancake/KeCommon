@@ -8,6 +8,7 @@ add_library(KeCommon
     device/system_MKE16F16.c
     source/semihost_hardfault.c
     source/cpp_config.cpp
+    startup/startup_mke16f16.cpp
     DeviceDrivers/FlexCan/FlexCan.cpp
     DeviceDrivers/LpSpi/LpSpi.cpp
     DeviceDrivers/Tle9461/Tle9461.cpp
