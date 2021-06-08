@@ -14,18 +14,15 @@
 class FlexCan : public ICan
 {
 private:
+    int mailboxCount;
     CAN_Type *can_base;
     void WritePayloadRegisters(flexcan_frame_t *frame, uint8_t *data, uint8_t dlc);
 
 public:
-    FlexCan();
-    
+    explicit FlexCan(int mailboxCount);
     void ConfigRxMailbox(uint32_t id, uint8_t mb_id);
-    
     bool Send(uint32_t id, Payload &data, uint8_t dlc) override;
-    
-    bool Receive(uint32_t *id, Payload *data, uint8_t dlc);
-    
+    bool Receive(uint32_t *id, Payload *data, uint8_t dlc) override;
 };
 
 #endif /* CDD_CAN_IL_H_ */

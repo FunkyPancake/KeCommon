@@ -6,13 +6,6 @@
  */
 #include "FlexCan.h"
 
-#define MAILBOX_COUNT 16
-
-FlexCan::FlexCan()
-{
-    can_base = CAN0; // only single CAN periph is in this MCU family
-}
-
 void FlexCan::ConfigRxMailbox(uint32_t id, uint8_t mb_id)
 {
     _flexcan_rx_mb_config config = {.type = kFLEXCAN_FrameTypeData};
@@ -33,6 +26,7 @@ bool FlexCan::Send(uint32_t id, Payload &data, uint8_t dlc)
 {
     flexcan_frame_t frame = {.type = kFLEXCAN_FrameTypeData};
     frame.length = dlc;
+
     if ((id & CAN_ID_EX_BIT) == CAN_ID_EX_BIT)
     {
         frame.id = id & 0x7fffffff;
@@ -40,14 +34,16 @@ bool FlexCan::Send(uint32_t id, Payload &data, uint8_t dlc)
     }
     else
     {
-        frame.id = id;
-        frame.format = kFLEXCAN_FrameFormatExtend;
+        frame.id = (id & 0x7ff) << 18;
+        frame.format = kFLEXCAN_FrameFormatStandard;
     }
     WritePayloadRegisters(&frame, (uint8_t *) data.b, dlc);
-    for (int i = 0; i < MAILBOX_COUNT; i++)
+    for (int i = 0; i < mailboxCount; i++)
     {
         if (FLEXCAN_WriteTxMb(can_base, i, &frame) == kStatus_Success)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -75,10 +71,16 @@ void FlexCan::WritePayloadRegisters(flexcan_frame_t *frame, uint8_t *data, uint8
         &frame->dataByte4,
         &frame->dataByte5,
         &frame->dataByte6,
-        &frame->dataByte7
-    };
+        &frame->dataByte7};
+
     for (int i = 0; i < dlc; i++)
     {
         *reg[i] = data[i];
     }
+}
+
+FlexCan::FlexCan(int mailboxCount)
+{
+    can_base = CAN0;// only single CAN periph is in this MCU family
+    this->mailboxCount = mailboxCount;
 }
