@@ -2,14 +2,12 @@
 // Created by PC on 19.04.2021.
 //
 
-#ifndef BASEKE16_ICOM_H
-#define BASEKE16_ICOM_H
-
+#pragma once
+#include "stdint.h"
+#include "vector"
 class ICom
 {
   public:
-    virtual void Write(void);
-    virtual void Read(void);
+    virtual bool WriteBytes(std::vector<uint8_t> data)=0;
+    virtual std::vector<uint8_t> ReadBytes(uint16_t size)=0;
 };
-
-#endif// BASEKE16_ICOM_H

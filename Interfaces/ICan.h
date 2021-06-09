@@ -5,8 +5,8 @@
  *      Author: Mati
  */
 
-#ifndef CDD_CAN_ABSTRACT_H_
-#define CDD_CAN_ABSTRACT_H_
+#pragma once
+
 #include <cstdint>
 
 #define CAN_ID_EX_BIT 0x80000000
@@ -23,5 +23,3 @@ public:
     virtual bool Send(uint32_t id, Payload &data, uint8_t dlc) = 0;
     virtual bool Receive(uint32_t *id, Payload *data, uint8_t dlc) = 0;
 };
-
-#endif /* CDD_CAN_ABSTRACT_H_ */

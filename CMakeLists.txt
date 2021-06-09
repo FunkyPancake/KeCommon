@@ -12,6 +12,7 @@ add_library(KeCommon
     DeviceDrivers/FlexCan/FlexCan.cpp
     DeviceDrivers/LpSpi/LpSpi.cpp
     DeviceDrivers/Tle9461/Tle9461.cpp
+    DeviceDrivers/LpUart/LpUart.cpp
     )
 
 target_include_directories(

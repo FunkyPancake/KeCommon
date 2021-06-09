@@ -5,8 +5,7 @@
  *      Author: Mati
  */
 
-#ifndef CDD_SPI_IL_H_
-#define CDD_SPI_IL_H_
+#pragma once
 
 #include "ISpi.h"
 #include "fsl_lpspi_freertos.h"
@@ -26,10 +25,12 @@ public:
         CsContinuous = kLPSPI_MasterPcsContinuous,
         ByteSwap = kLPSPI_MasterByteSwap
     };
-    bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len);
-    LpSpiRtos(lpspi_rtos_handle_t *handle);
+    
+    bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len) override;
+    std::vector<uint8_t> ReadBytes(uint16_t size) override;
+    bool WriteBytes(std::vector<uint8_t> data) override;
+    explicit LpSpiRtos(lpspi_rtos_handle_t *handle);
     void SetFlags(uint32_t flags);
     ~LpSpiRtos();
 };
 
-#endif /* CDD_SPI_IL_H_ */

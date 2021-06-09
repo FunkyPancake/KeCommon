@@ -5,14 +5,13 @@
  *      Author: Mati
  */
 
-#ifndef CDD_SPI_ABSTRACT_H_
-#define CDD_SPI_ABSTRACT_H_
+#pragma once
+
+#include "ICom.h"
 #include <stdint.h>
 
-class ISpi
+class ISpi :public ICom
 {
 public:
     virtual bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len) = 0;
 };
-
-#endif /* CDD_SPI_ABSTRACT_H_ */
