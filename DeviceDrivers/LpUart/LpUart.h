@@ -5,11 +5,17 @@
 #pragma once
 
 #include <IUart.h>
+#include <fsl_lpuart_freertos.h>
 
 class LpUart : public IUart
 {
+private:
+    lpuart_rtos_handle_t* _handle;
+    uint32_t _baseClock;
 public:
+    LpUart(lpuart_rtos_handle_t* handle,uint32_t baseClock);
     std::vector<uint8_t> ReadBytes(uint16_t size) override;
     bool WriteBytes(std::vector<uint8_t> data) override;
+    void SetBaudrate(uint32_t baudrate);
 };
 

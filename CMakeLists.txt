@@ -25,6 +25,7 @@ target_include_directories(
     DeviceDrivers/FlexCan
     DeviceDrivers/LpSpi
     DeviceDrivers/Tle9461
+    DeviceDrivers/LpUart
 )
 
 add_subdirectory(drivers)
