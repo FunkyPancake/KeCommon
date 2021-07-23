@@ -83,6 +83,7 @@
 #define configGENERATE_RUN_TIME_STATS           0
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
+#define configRECORD_STACK_HIGH_ADDRESS         1
 
 /* Co-routine related definitions. */
 #define configUSE_CO_ROUTINES                   0
@@ -143,5 +144,7 @@ standard names. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
+
+
 
 #endif /* FREERTOS_CONFIG_H */
