@@ -3,7 +3,6 @@
 //
 
 #include "LpUart.h"
-#include "fsl_lpuart.h"
 
 std::vector<uint8_t> LpUart::ReadBytes(uint16_t size)
 {

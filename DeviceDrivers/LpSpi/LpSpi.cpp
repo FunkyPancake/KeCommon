@@ -55,15 +55,17 @@ std::vector<uint8_t> LpSpiRtos::ReadBytes(uint16_t size)
 
 bool LpSpiRtos::WriteBytes(std::vector<uint8_t> data)
 {
-    int len = data.size();
+    size_t len = data.size();
     uint8_t txbuf[len];
     uint8_t rxbuf[len];
     lpspi_transfer_t spiData = {
         reinterpret_cast<uint8_t *>(&txbuf),
         reinterpret_cast<uint8_t *>(&rxbuf),
-        static_cast<size_t>(len),
+        len,
         kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous
     };
     return LPSPI_RTOS_Transfer(this->handle, &spiData) == kStatus_Success;
 }
-void LpSpiRtos::SetBaudrate(uint32_t baudrate){}
+void LpSpiRtos::SetBaudrate(uint32_t baudrate){
+    (void)baudrate;
+}

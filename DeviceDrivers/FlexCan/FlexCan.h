@@ -16,7 +16,7 @@ class FlexCan : public ICan
 private:
     int mailboxCount;
     CAN_Type *can_base;
-    void WritePayloadRegisters(flexcan_frame_t *frame, uint8_t *data, uint8_t dlc);
+    static void WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc);
 
 public:
     explicit FlexCan(int mailboxCount);

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "ICom.h"
-#include <stdint.h>
+#include <cstdint>
 
 class ISpi :public ICom
 {

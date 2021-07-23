@@ -61,7 +61,7 @@ bool FlexCan::Receive(uint32_t *id, Payload *data, uint8_t dlc)
     return false;
 }
 
-void FlexCan::WritePayloadRegisters(flexcan_frame_t *frame, uint8_t *data, uint8_t dlc)
+void FlexCan::WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc)
 {
     uint8_t *reg[8] = {
         &frame->dataByte0,
