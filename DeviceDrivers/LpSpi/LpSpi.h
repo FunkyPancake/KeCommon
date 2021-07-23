@@ -9,6 +9,9 @@
 
 #include "ISpi.h"
 #include "fsl_lpspi_freertos.h"
+#include <array>
+#include <vector>
+
 
 class LpSpiRtos : public ISpi
 {
@@ -31,6 +34,7 @@ public:
     bool WriteBytes(std::vector<uint8_t> data) override;
     explicit LpSpiRtos(lpspi_rtos_handle_t *handle);
     void SetFlags(uint32_t flags);
+    void SetBaudrate(uint32_t baudrate) override;
     ~LpSpiRtos();
 };
 

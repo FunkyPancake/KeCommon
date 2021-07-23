@@ -4,7 +4,6 @@
  *  Created on: 14 gru 2020
  *      Author: Mati
  */
-#include <array>
 #include "LpSpi.h"
 
 bool LpSpiRtos::Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len)
@@ -67,3 +66,4 @@ bool LpSpiRtos::WriteBytes(std::vector<uint8_t> data)
     };
     return LPSPI_RTOS_Transfer(this->handle, &spiData) == kStatus_Success;
 }
+void LpSpiRtos::SetBaudrate(uint32_t baudrate){}
