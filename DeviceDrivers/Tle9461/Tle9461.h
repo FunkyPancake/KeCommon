@@ -12,27 +12,8 @@
 
 class Tle9461
 {
-    
-    typedef enum
-    {
-        WgTimer10ms,
-        WgTimer20ms,
-        WgTimer50ms,
-        WgTimer100ms,
-        WgTimer200ms,
-        WgTimer500ms,
-        WgTimer1000ms,
-        WgTimer10000ms
-    } WgPeriodEnum;
-    
-    typedef enum
-    {
-        StateNormal,
-        StateSleep,
-        StateStop,
-        StateReset
-    } StateEnum;
-    
+
+private:
     typedef union
     {
         struct
@@ -48,14 +29,12 @@ class Tle9461
         } B;
         uint8_t R;
     } DeviceStatusType;
-
-private:
     uint8_t *txBuf;
     uint8_t *rxBuf;
     DeviceStatusType status;
     uint8_t wdReg;
     ISpi *spi;
-    
+    const uint8_t spiCommandLength = 2;
     void GetStatus(uint8_t data);
     
     bool ReadRegister(uint8_t regAddr, uint8_t *data, bool clearFlag);
@@ -64,11 +43,25 @@ private:
 
 public:
     
+    typedef enum
+    {
+        WgTimer10ms = 0,
+        WgTimer20ms,
+        WgTimer50ms,
+        WgTimer100ms,
+        WgTimer200ms,
+        WgTimer500ms,
+        WgTimer1000ms,
+        WgTimer10000ms
+    } WdTimerPeriod;
+    
     explicit Tle9461(ISpi *spi);
     
     ~Tle9461();
     
     void Init();
+    
+    void ConfigWatchdog(Tle9461::WdTimerPeriod timeoutMs, bool windowWatchdog = false);
     
     void RefreshWatchdog();
     
