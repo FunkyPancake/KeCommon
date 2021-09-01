@@ -123,7 +123,6 @@ void Tle9461::RefreshWatchdog()
         sum += (reg.R >> i) & 0x01;
     }
     reg.B.Checksum = sum & 0x01;
-    wdReg= reg.R;
     WriteRegister(WD_CTRL, reg.R);
 }
 
