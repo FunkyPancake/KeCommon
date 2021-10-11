@@ -13,7 +13,7 @@ private:
     lpuart_rtos_handle_t* _handle;
     uint32_t _baseClock;
 public:
-    LpUart(lpuart_rtos_handle_t* handle,uint32_t baseClock);
+    LpUart(lpuart_rtos_handle_t* handle, lpuart_rtos_config_t *config);
     std::vector<uint8_t> ReadBytes(uint16_t size) override;
     bool WriteBytes(std::vector<uint8_t> data) override;
     void SetBaudrate(uint32_t baudrate);

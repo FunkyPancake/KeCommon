@@ -19,10 +19,10 @@ bool LpUart::WriteBytes(std::vector<uint8_t> data)
     return LPUART_RTOS_Send(_handle, data.data(), data.size()) == kStatus_Success;
 }
 
-LpUart::LpUart(lpuart_rtos_handle_t *handle,uint32_t baseClock)
+LpUart::LpUart(lpuart_rtos_handle_t *handle, lpuart_rtos_config_t *config)
 {
     _handle = handle;
-    _baseClock = baseClock;
+    _baseClock = config->srcclk;
 }
 
 void LpUart::SetBaudrate(uint32_t baudrate)
