@@ -998,7 +998,7 @@ uint32_t CLOCK_GetSysPllMultDiv(uint32_t refFreq, uint32_t desireFreq, uint8_t *
  *                                            .div1 = kSCG_AsyncClkDivBy1,
  *                                            .div2 = kSCG_AsyncClkDisable,
  *                                            .div3 = kSCG_AsyncClkDivBy2,
- *                                            .src = kSCG_SysPllSrcFirc,
+ *                                            .source = kSCG_SysPllSrcFirc,
  *                                            .isBypassSelected = false,
  *                                            .isPfdSelected = false,
  *                                            .prediv = 5U,

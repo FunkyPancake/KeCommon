@@ -5,10 +5,10 @@ project(KeCommon LANGUAGES CXX C)
 
 
 add_library(KeCommon
-    device/system_MKE16F16.c
-    source/semihost_hardfault.c
-    source/cpp_config.cpp
-    startup/startup_mke16f16.cpp
+        nxp/device/system_MKE16F16.c
+        nxp/source/semihost_hardfault.c
+        nxp/source/cpp_config.cpp
+        nxp/startup/startup_mke16f16.cpp
     DeviceDrivers/FlexCan/FlexCan.cpp
     DeviceDrivers/LpSpi/LpSpi.cpp
     DeviceDrivers/Tle9461/Tle9461.cpp
@@ -18,18 +18,18 @@ add_library(KeCommon
 target_include_directories(
     KeCommon
     PUBLIC
-    Interfaces
-    device
-    CMSIS
-    source
+        Interfaces
+        nxp/device
+        nxp/CMSIS
+        nxp/source
     DeviceDrivers/FlexCan
     DeviceDrivers/LpSpi
     DeviceDrivers/Tle9461
     DeviceDrivers/LpUart
 )
 
-add_subdirectory(drivers)
-add_subdirectory(freertos)
+add_subdirectory(nxp/drivers)
+add_subdirectory(nxp/freertos)
 
 target_compile_definitions(KeCommon
     PRIVATE

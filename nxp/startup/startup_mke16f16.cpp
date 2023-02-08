@@ -264,7 +264,7 @@ extern void __main(void);
 extern int main(void);
 
 //*****************************************************************************
-// External declaration for the pointer to the stack top from the Linker Script
+// External declaration for the pointer to the stack top from the linker Script
 //*****************************************************************************
 extern void _vStackTop(void);
 //*****************************************************************************
