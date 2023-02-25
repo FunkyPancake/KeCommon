@@ -13,11 +13,11 @@ add_library(KeCommon
         DeviceDrivers/LpSpi/LpSpi.cpp
         DeviceDrivers/Tle9461/Tle9461.cpp
         DeviceDrivers/LpUart/LpUart.cpp
-        Utils/MapLookup/Custom1DMap.cpp
-        Utils/MapLookup/Custom2DMap.cpp
-        Utils/MapLookup/Ifl.c
-        Utils/MapLookup/Ifx.c
-        )
+#        Utils/MapLookup/Custom1DMap.cpp
+#        Utils/MapLookup/Custom2DMap.cpp
+#        Utils/MapLookup/Ifl.c
+#        Utils/MapLookup/Ifx.c
+        Utils/Calibration/Calibration.cpp)
 
 target_include_directories(
         KeCommon
@@ -31,6 +31,7 @@ target_include_directories(
         DeviceDrivers/Tle9461
         DeviceDrivers/LpUart
         Utils/MapLookup
+        Utils/Calibration
 )
 
 add_subdirectory(nxp/drivers)
