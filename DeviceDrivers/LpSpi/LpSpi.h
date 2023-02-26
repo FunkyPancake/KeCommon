@@ -31,7 +31,7 @@ public:
     
     bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len) override;
     std::vector<uint8_t> ReadBytes(uint16_t size) override;
-    bool WriteBytes(std::vector<uint8_t> data) override;
+    bool WriteBytes(const std::vector<uint8_t>& data) override;
     explicit LpSpiRtos(lpspi_rtos_handle_t *handle);
     void SetFlags(uint32_t flags);
     void SetBaudrate(uint32_t baudrate) override;

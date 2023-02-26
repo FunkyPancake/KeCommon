@@ -53,7 +53,7 @@ std::vector<uint8_t> LpSpiRtos::ReadBytes(uint16_t size)
     }
 }
 
-bool LpSpiRtos::WriteBytes(std::vector<uint8_t> data)
+bool LpSpiRtos::WriteBytes(const std::vector<uint8_t>& data)
 {
     size_t len = data.size();
     uint8_t txbuf[len];
