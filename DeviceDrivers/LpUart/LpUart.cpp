@@ -11,10 +11,10 @@ std::vector<uint8_t> LpUart::ReadBytes(uint16_t size)
     do{
         LPUART_RTOS_Receive(_handle, buf.data(), buf.size(), &realSize);
     }while(realSize != size);
-    return std::vector<uint8_t>(buf.begin(),buf.begin()+realSize);
+    return {buf.begin(),(buf.begin()+realSize)};
 }
 
-bool LpUart::WriteBytes(std::vector<uint8_t> data)
+bool LpUart::WriteBytes(const std::vector<uint8_t>& data)
 {
     return LPUART_RTOS_Send(_handle, data.data(), data.size()) == kStatus_Success;
 }

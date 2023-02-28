@@ -23,6 +23,8 @@ public:
     void ConfigRxMailbox(uint32_t id, uint8_t mb_id);
     bool Send(uint32_t id, Payload &data, uint8_t dlc) override;
     bool Receive(uint32_t *id, Payload *data, uint8_t dlc) override;
+    bool SendCyclic();
+
 };
 
 #endif /* CDD_CAN_IL_H_ */

@@ -7,103 +7,52 @@
  *
  */
 
-#ifndef FSL_FTFX_FLASH_H
-#define FSL_FTFX_FLASH_H
+#ifndef FSL_FTFX_FLEXNVM_H
+#define FSL_FTFX_FLEXNVM_H
 
 #include "fsl_ftfx_controller.h"
 
 /*!
- * @addtogroup ftfx_flash_driver
+ * @addtogroup ftfx_flexnvm_driver
  * @{
  */
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define kStatus_FLASH_Success kStatus_FTFx_Success
-#define kFLASH_ApiEraseKey kFTFx_ApiEraseKey
 
 /*!
- * @name Flash version
+ * @name Flexnvm version
  * @{
  */
-/*! @brief Flash driver version for SDK*/
-#define FSL_FLASH_DRIVER_VERSION (MAKE_VERSION(3U, 0U, 2U)) /*!< Version 3.0.2. */
-
-/*! @brief Flash driver version for ROM*/
-#define FSL_FLASH_DRIVER_VERSION_ROM (MAKE_VERSION(3U, 0U, 0U)) /*!< Version 3.0.0. */
-
+/*! @brief Flexnvm driver version for SDK*/
+#define FSL_FLEXNVM_DRIVER_VERSION (MAKE_VERSION(3, 0, 2)) /*!< Version 3.0.2. */
 /*@}*/
 
 /*!
- * @brief Enumeration for the three possible flash protection levels.
+ * @brief Enumeration for various flexnvm properties.
  */
-typedef enum _flash_protection_state
+typedef enum _flexnvm_property_tag
 {
-    kFLASH_ProtectionStateUnprotected, /*!< Flash region is not protected.*/
-    kFLASH_ProtectionStateProtected,   /*!< Flash region is protected.*/
-    kFLASH_ProtectionStateMixed        /*!< Flash is mixed with protected and unprotected region.*/
-} flash_prot_state_t;
+    kFLEXNVM_PropertyDflashSectorSize         = 0x00U, /*!< Dflash sector size property.*/
+    kFLEXNVM_PropertyDflashTotalSize          = 0x01U, /*!< Dflash total size property.*/
+    kFLEXNVM_PropertyDflashBlockSize          = 0x02U, /*!< Dflash block size property.*/
+    kFLEXNVM_PropertyDflashBlockCount         = 0x03U, /*!< Dflash block count property.*/
+    kFLEXNVM_PropertyDflashBlockBaseAddr      = 0x04U, /*!< Dflash block base address property.*/
+    kFLEXNVM_PropertyAliasDflashBlockBaseAddr = 0x05U, /*!< Dflash block base address Alias property.*/
+    kFLEXNVM_PropertyFlexRamBlockBaseAddr     = 0x06U, /*!< FlexRam block base address property.*/
+    kFLEXNVM_PropertyFlexRamTotalSize         = 0x07U, /*!< FlexRam total size property.*/
+    kFLEXNVM_PropertyEepromTotalSize          = 0x08U, /*!< EEPROM total size property.*/
+} flexnvm_property_tag_t;
 
-/*!
- * @brief PFlash protection status
- */
-typedef union _pflash_protection_status
-{
-    uint32_t protl; /*!< PROT[31:0] .*/
-    uint32_t proth; /*!< PROT[63:32].*/
-    uint8_t protsl; /*!< PROTS[7:0] .*/
-    uint8_t protsh; /*!< PROTS[15:8] .*/
-    uint8_t reserved[2];
-} pflash_prot_status_t;
-
-#if defined(FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL) && FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
-/*!
- * @brief Enumeration for the three possible flash execute access levels.
- */
-typedef enum _flash_execute_only_access_state
-{
-    kFLASH_AccessStateUnLimited,   /*!< Flash region is unlimited.*/
-    kFLASH_AccessStateExecuteOnly, /*!< Flash region is execute only.*/
-    kFLASH_AccessStateMixed        /*!< Flash is mixed with unlimited and execute only region.*/
-} flash_xacc_state_t;
-#endif /* not define FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL */
-
-/*!
- * @brief Enumeration for various flash properties.
- */
-typedef enum _flash_property_tag
-{
-    kFLASH_PropertyPflash0SectorSize         = 0x00U, /*!< Pflash sector size property.*/
-    kFLASH_PropertyPflash0TotalSize          = 0x01U, /*!< Pflash total size property.*/
-    kFLASH_PropertyPflash0BlockSize          = 0x02U, /*!< Pflash block size property.*/
-    kFLASH_PropertyPflash0BlockCount         = 0x03U, /*!< Pflash block count property.*/
-    kFLASH_PropertyPflash0BlockBaseAddr      = 0x04U, /*!< Pflash block base address property.*/
-    kFLASH_PropertyPflash0FacSupport         = 0x05U, /*!< Pflash fac support property.*/
-    kFLASH_PropertyPflash0AccessSegmentSize  = 0x06U, /*!< Pflash access segment size property.*/
-    kFLASH_PropertyPflash0AccessSegmentCount = 0x07U, /*!< Pflash access segment count property.*/
-
-    kFLASH_PropertyPflash1SectorSize         = 0x10U, /*!< Pflash sector size property.*/
-    kFLASH_PropertyPflash1TotalSize          = 0x11U, /*!< Pflash total size property.*/
-    kFLASH_PropertyPflash1BlockSize          = 0x12U, /*!< Pflash block size property.*/
-    kFLASH_PropertyPflash1BlockCount         = 0x13U, /*!< Pflash block count property.*/
-    kFLASH_PropertyPflash1BlockBaseAddr      = 0x14U, /*!< Pflash block base address property.*/
-    kFLASH_PropertyPflash1FacSupport         = 0x15U, /*!< Pflash fac support property.*/
-    kFLASH_PropertyPflash1AccessSegmentSize  = 0x16U, /*!< Pflash access segment size property.*/
-    kFLASH_PropertyPflash1AccessSegmentCount = 0x17U, /*!< Pflash access segment count property.*/
-
-    kFLASH_PropertyFlexRamBlockBaseAddr = 0x20U, /*!< FlexRam block base address property.*/
-    kFLASH_PropertyFlexRamTotalSize     = 0x21U, /*!< FlexRam total size property.*/
-} flash_property_tag_t;
-
-/*! @brief Flash driver state information.
+/*! @brief Flexnvm driver state information.
  *
- * An instance of this structure is allocated by the user of the flash driver and
+ * An instance of this structure is allocated by the user of the Flexnvm driver and
  * passed into each of the driver APIs.
  */
-typedef struct _flash_config
+typedef struct _flexnvm_config
 {
-    ftfx_config_t ftfxConfig[FTFx_FLASH_COUNT];
-} flash_config_t;
+    ftfx_config_t ftfxConfig;
+} flexnvm_config_t;
 
 /*******************************************************************************
  * API
@@ -130,7 +79,7 @@ extern "C" {
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
  * @retval #kStatus_FTFx_PartitionStatusUpdateFailure Failed to update the partition status.
  */
-status_t FLASH_Init(flash_config_t *config);
+status_t FLEXNVM_Init(flexnvm_config_t *config);
 
 /*@}*/
 
@@ -152,8 +101,8 @@ status_t FLASH_Init(flash_config_t *config);
  *                      to be erased. Must be word-aligned.
  * @param key The value used to validate all flash erase APIs.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the appropriate number of flash sectors based on the
- *         desired start address and length were erased successfully.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the appropriate number of date flash sectors based on
+ * the desired start address and length were erased successfully.
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError The parameter is not aligned with the specified baseline.
@@ -164,7 +113,7 @@ status_t FLASH_Init(flash_config_t *config);
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_Erase(flash_config_t *config, uint32_t start, uint32_t lengthInBytes, uint32_t key);
+status_t FLEXNVM_DflashErase(flexnvm_config_t *config, uint32_t start, uint32_t lengthInBytes, uint32_t key);
 
 /*!
  * @brief Erases entire flexnvm
@@ -172,9 +121,7 @@ status_t FLASH_Erase(flash_config_t *config, uint32_t start, uint32_t lengthInBy
  * @param config Pointer to the storage for the driver runtime state.
  * @param key A value used to validate all flash erase APIs.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the all pflash and flexnvm were erased successfully,
- *         the swap and eeprom have been reset to unconfigured state.
- *
+ * @retval #kStatus_FTFx_Success API was executed successfully; the entire flexnvm has been erased successfully.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_EraseKeyError API erase key is invalid.
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
@@ -183,7 +130,7 @@ status_t FLASH_Erase(flash_config_t *config, uint32_t start, uint32_t lengthInBy
  * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
  * @retval #kStatus_FTFx_PartitionStatusUpdateFailure Failed to update the partition status.
  */
-status_t FLASH_EraseAll(flash_config_t *config, uint32_t key);
+status_t FLEXNVM_EraseAll(flexnvm_config_t *config, uint32_t key);
 
 #if defined(FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_UNSECURE_CMD) && FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_UNSECURE_CMD
 /*!
@@ -192,9 +139,7 @@ status_t FLASH_EraseAll(flash_config_t *config, uint32_t key);
  * @param config Pointer to the storage for the driver runtime state.
  * @param key A value used to validate all flash erase APIs.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully;
- *         the protected sectors of flash were reset to unprotected status.
- *
+ * @retval #kStatus_FTFx_Success API was executed successfully; the flexnvm is not in securityi state.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_EraseKeyError API erase key is invalid.
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
@@ -203,7 +148,7 @@ status_t FLASH_EraseAll(flash_config_t *config, uint32_t key);
  * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
  * @retval #kStatus_FTFx_PartitionStatusUpdateFailure Failed to update the partition status.
  */
-status_t FLASH_EraseAllUnsecure(flash_config_t *config, uint32_t key);
+status_t FLEXNVM_EraseAllUnsecure(flexnvm_config_t *config, uint32_t key);
 #endif /* FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_UNSECURE_CMD */
 
 /*@}*/
@@ -227,8 +172,8 @@ status_t FLASH_EraseAllUnsecure(flash_config_t *config, uint32_t key);
  * @param lengthInBytes The length, given in bytes (not words or long-words),
  *                      to be programmed. Must be word-aligned.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the desired data were programed successfully
- *         into flash based on desired start address and length.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the desired date have been successfully
+ *         programed into specified date flash region.
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with the specified baseline.
@@ -238,30 +183,7 @@ status_t FLASH_EraseAllUnsecure(flash_config_t *config, uint32_t key);
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_Program(flash_config_t *config, uint32_t start, uint8_t *src, uint32_t lengthInBytes);
-
-/*!
- * @brief Program the Program-Once-Field through parameters.
- *
- * This function Program the Program-once-feild with given index and length.
- *
- * @param config A pointer to the storage for the driver runtime state.
- * @param index The index indicating the area of program once field to be read.
- * @param src A pointer to the source buffer of data that is used to store
- *        data to be write.
- * @param lengthInBytes The length, given in bytes (not words or long-words),
- *        to be programmed. Must be word-aligned.
- *
- * @retval #kStatus_FTFx_Success API was executed successfully; The index indicating the area
- *         of program once field was programed successfully.
- *
- * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
- * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
- * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
- * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
- * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
- */
-status_t FLASH_ProgramOnce(flash_config_t *config, uint32_t index, uint8_t *src, uint32_t lengthInBytes);
+status_t FLEXNVM_DflashProgram(flexnvm_config_t *config, uint32_t start, uint8_t *src, uint32_t lengthInBytes);
 
 #if defined(FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD) && FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD
 /*!
@@ -273,13 +195,13 @@ status_t FLASH_ProgramOnce(flash_config_t *config, uint32_t index, uint8_t *src,
  * @param config A pointer to the storage for the driver runtime state.
  * @param start The start address of the desired flash memory to be programmed. Must be
  *              word-aligned.
- * @param src A pointer to the source buffer of data that is to be programmed
+ * @param source A pointer to the source buffer of data that is to be programmed
  *            into the flash.
  * @param lengthInBytes The length, given in bytes (not words or long-words),
  *                      to be programmed. Must be word-aligned.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the desired data have been programed successfully into
- *         flash based on start address and length.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the desired date have been successfully
+ *         programed into specified date flash area.
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with specified baseline.
@@ -291,8 +213,32 @@ status_t FLASH_ProgramOnce(flash_config_t *config, uint32_t index, uint8_t *src,
  * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
  * @retval #kStatus_FTFx_RecoverFlexramAsEepromError Failed to recover FlexRAM as EEPROM.
  */
-status_t FLASH_ProgramSection(flash_config_t *config, uint32_t start, uint8_t *src, uint32_t lengthInBytes);
+status_t FLEXNVM_DflashProgramSection(flexnvm_config_t *config, uint32_t start, uint8_t *source, uint32_t lengthInBytes);
 #endif /* FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD */
+
+/*!
+ * @brief Prepares the FlexNVM block for use as data flash, EEPROM backup, or a combination of both and initializes the
+ * FlexRAM.
+ *
+ * @param config Pointer to storage for the driver runtime state.
+ * @param option The option used to set FlexRAM load behavior during reset.
+ * @param eepromDataSizeCode Determines the amount of FlexRAM used in each of the available EEPROM subsystems.
+ * @param flexnvmPartitionCode Specifies how to split the FlexNVM block between data flash memory and EEPROM backup
+ *        memory supporting EEPROM functions.
+ *
+ * @retval #kStatus_FTFx_Success API was executed successfully; the FlexNVM block for use as data flash, EEPROM backup,
+ *         or a combination of both have been Prepared.
+ *
+ * @retval #kStatus_FTFx_InvalidArgument Invalid argument is provided.
+ * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
+ * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
+ * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
+ * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
+ */
+status_t FLEXNVM_ProgramPartition(flexnvm_config_t *config,
+                                  ftfx_partition_flexram_load_opt_t option,
+                                  uint32_t eepromDataSizeCode,
+                                  uint32_t flexnvmPartitionCode);
 
 /*@}*/
 
@@ -317,8 +263,8 @@ status_t FLASH_ProgramSection(flash_config_t *config, uint32_t start, uint8_t *s
  *        to be read. Must be word-aligned.
  * @param option The resource option which indicates which area should be read back.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully;  the data have been read successfully from
- *         program flash IFR, data flash IFR space, and the Version ID field.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the data have been read successfully from
+ *         program flash IFR, data flash IFR space, and the Version ID field
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with the specified baseline.
@@ -327,32 +273,9 @@ status_t FLASH_ProgramSection(flash_config_t *config, uint32_t start, uint8_t *s
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_ReadResource(
-    flash_config_t *config, uint32_t start, uint8_t *dst, uint32_t lengthInBytes, ftfx_read_resource_opt_t option);
+status_t FLEXNVM_ReadResource(
+    flexnvm_config_t *config, uint32_t start, uint8_t *dst, uint32_t lengthInBytes, ftfx_read_resource_opt_t option);
 #endif /* FSL_FEATURE_FLASH_HAS_READ_RESOURCE_CMD */
-
-/*!
- * @brief Reads the Program Once Field through parameters.
- *
- * This function reads the read once feild with given index and length.
- *
- * @param config A pointer to the storage for the driver runtime state.
- * @param index The index indicating the area of program once field to be read.
- * @param dst A pointer to the destination buffer of data that is used to store
- *        data to be read.
- * @param lengthInBytes The length, given in bytes (not words or long-words),
- *        to be programmed. Must be word-aligned.
- *
- * @retval #kStatus_FTFx_Success API was executed successfully; the data have been successfuly
- *         read form Program flash0 IFR map and Program Once field based on index and length.
-
- * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
- * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
- * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
- * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
- * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
- */
-status_t FLASH_ReadOnce(flash_config_t *config, uint32_t index, uint8_t *dst, uint32_t lengthInBytes);
 
 /*@}*/
 
@@ -375,8 +298,7 @@ status_t FLASH_ReadOnce(flash_config_t *config, uint32_t index, uint8_t *dst, ui
  *        to be verified. Must be word-aligned.
  * @param margin Read margin choice.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the specified FLASH region has been erased.
- *
+ * @retval #kStatus_FTFx_Success API was executed successfully; the specified data flash region is in erased state.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with specified baseline.
  * @retval #kStatus_FTFx_AddressError Address is out of range.
@@ -385,7 +307,10 @@ status_t FLASH_ReadOnce(flash_config_t *config, uint32_t index, uint8_t *dst, ui
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_VerifyErase(flash_config_t *config, uint32_t start, uint32_t lengthInBytes, ftfx_margin_value_t margin);
+status_t FLEXNVM_DflashVerifyErase(flexnvm_config_t *config,
+                                   uint32_t start,
+                                   uint32_t lengthInBytes,
+                                   ftfx_margin_value_t margin);
 
 /*!
  * @brief Verifies erasure of the entire flash at a specified margin level.
@@ -396,15 +321,14 @@ status_t FLASH_VerifyErase(flash_config_t *config, uint32_t start, uint32_t leng
  * @param config A pointer to the storage for the driver runtime state.
  * @param margin Read margin choice.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; all program flash and flexnvm were in erased state.
- *
+ * @retval #kStatus_FTFx_Success API was executed successfully; the entire flexnvm region is in erased state.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
  * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_VerifyEraseAll(flash_config_t *config, ftfx_margin_value_t margin);
+status_t FLEXNVM_VerifyEraseAll(flexnvm_config_t *config, ftfx_margin_value_t margin);
 
 /*!
  * @brief Verifies programming of the desired flash area at a specified margin level.
@@ -425,8 +349,8 @@ status_t FLASH_VerifyEraseAll(flash_config_t *config, ftfx_margin_value_t margin
  *        not include failed data as part of the FCCOBx registers.  In this
  *        case, zeros are returned upon failure.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the desired data have been successfully programed into
- *         specified FLASH region.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the desired data hve been programed successfully into
+ *         specified data flash region.
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with specified baseline.
@@ -436,13 +360,13 @@ status_t FLASH_VerifyEraseAll(flash_config_t *config, ftfx_margin_value_t margin
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_VerifyProgram(flash_config_t *config,
-                             uint32_t start,
-                             uint32_t lengthInBytes,
-                             const uint8_t *expectedData,
-                             ftfx_margin_value_t margin,
-                             uint32_t *failedAddress,
-                             uint32_t *failedData);
+status_t FLEXNVM_DflashVerifyProgram(flexnvm_config_t *config,
+                                     uint32_t start,
+                                     uint32_t lengthInBytes,
+                                     const uint8_t *expectedData,
+                                     ftfx_margin_value_t margin,
+                                     uint32_t *failedAddress,
+                                     uint32_t *failedData);
 
 /*@}*/
 
@@ -460,10 +384,12 @@ status_t FLASH_VerifyProgram(flash_config_t *config,
  * @param config A pointer to storage for the driver runtime state.
  * @param state A pointer to the value returned for the current security status code:
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the security state of flash was stored to state.
+ * @retval #kStatus_FTFx_Success API was executed successfully;
+ *         the security state of flexnvm was stored to state.
+ *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  */
-status_t FLASH_GetSecurityState(flash_config_t *config, ftfx_security_state_t *state);
+status_t FLEXNVM_GetSecurityState(flexnvm_config_t *config, ftfx_security_state_t *state);
 
 /*!
  * @brief Allows users to bypass security with a backdoor key.
@@ -482,7 +408,7 @@ status_t FLASH_GetSecurityState(flash_config_t *config, ftfx_security_state_t *s
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_SecurityBypass(flash_config_t *config, const uint8_t *backdoorKey);
+status_t FLEXNVM_SecurityBypass(flexnvm_config_t *config, const uint8_t *backdoorKey);
 
 /*@}*/
 
@@ -498,138 +424,121 @@ status_t FLASH_SecurityBypass(flash_config_t *config, const uint8_t *backdoorKey
  * @param config A pointer to the storage for the driver runtime state.
  * @param option The option used to set the work mode of FlexRAM.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the FlexRAM has been successfully configured as RAM or
- * EEPROM.
+ * @retval #kStatus_FTFx_Success API was executed successfully;
+ *         the FlexRAM has been successfully configured as RAM or EEPROM
+ *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
  * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
  * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during the command execution.
  */
-status_t FLASH_SetFlexramFunction(flash_config_t *config, ftfx_flexram_func_opt_t option);
+status_t FLEXNVM_SetFlexramFunction(flexnvm_config_t *config, ftfx_flexram_func_opt_t option);
 #endif /* FSL_FEATURE_FLASH_HAS_SET_FLEXRAM_FUNCTION_CMD */
 
 /*@}*/
 
 /*!
- * @name Swap
- * @{
- */
-
-#if defined(FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP) && FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP
-/*!
- * @brief Swaps the lower half flash with the higher half flash.
+ * @brief Programs the EEPROM with data at locations passed in through parameters.
  *
- * @param config A pointer to the storage for the driver runtime state.
- * @param address Address used to configure the flash swap function
- * @param isSetEnable The possible option used to configure the Flash Swap function or check the flash Swap status.
- *
- * @retval #kStatus_FTFx_Success API was executed successfully; the lower half flash and higher half flash have been
- * swaped.
- * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
- * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with specified baseline.
- * @retval #kStatus_FTFx_SwapIndicatorAddressError Swap indicator address is invalid.
- * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
- * @retval #kStatus_FTFx_AccessError Invalid instruction codes and out-of bounds addresses.
- * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
- * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
- * @retval #kStatus_FTFx_SwapSystemNotInUninitialized Swap system is not in an uninitialized state.
- */
-status_t FLASH_Swap(flash_config_t *config, uint32_t address, bool isSetEnable);
-#endif /* FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP */
-
-/*@}*/
-
-/*!
- * @name Protection
- * @{
- */
-
-/*!
- * @brief Returns the protection state of the desired flash area via the pointer passed into the function.
- *
- * This function retrieves the current flash protect status for a given
+ * This function programs the emulated EEPROM with the desired data for a given
  * flash area as determined by the start address and length.
  *
  * @param config A pointer to the storage for the driver runtime state.
- * @param start The start address of the desired flash memory to be checked. Must be word-aligned.
- * @param lengthInBytes The length, given in bytes (not words or long-words)
- *        to be checked.  Must be word-aligned.
- * @param protection_state A pointer to the value returned for the current
- *        protection status code for the desired flash area.
- *
- * @retval #kStatus_FTFx_Success API was executed successfully; the protection state of specified FLASH region was
- * stored to protection_state.
- *
- * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
- * @retval #kStatus_FTFx_AlignmentError Parameter is not aligned with specified baseline.
- * @retval #kStatus_FTFx_AddressError The address is out of range.
- */
-status_t FLASH_IsProtected(flash_config_t *config,
-                           uint32_t start,
-                           uint32_t lengthInBytes,
-                           flash_prot_state_t *protection_state);
-
-#if defined(FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL) && FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL
-/*!
- * @brief Returns the access state of the desired flash area via the pointer passed into the function.
- *
- * This function retrieves the current flash access status for a given
- * flash area as determined by the start address and length.
- *
- * @param config A pointer to the storage for the driver runtime state.
- * @param start The start address of the desired flash memory to be checked. Must be word-aligned.
+ * @param start The start address of the desired flash memory to be programmed. Must be
+ *              word-aligned.
+ * @param src A pointer to the source buffer of data that is to be programmed
+ *            into the flash.
  * @param lengthInBytes The length, given in bytes (not words or long-words),
- *        to be checked.  Must be word-aligned.
- * @param access_state A pointer to the value returned for the current
- *        access status code for the desired flash area.
+ *                      to be programmed. Must be word-aligned.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the executeOnly state of specified FLASH region was
- * stored to access_state.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the desires data have been successfully programed
+ *         into specified eeprom region.
  *
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
- * @retval #kStatus_FTFx_AlignmentError The parameter is not aligned to the specified baseline.
- * @retval #kStatus_FTFx_AddressError The address is out of range.
+ * @retval #kStatus_FTFx_AddressError Address is out of range.
+ * @retval #kStatus_FTFx_SetFlexramAsEepromError Failed to set flexram as eeprom.
+ * @retval #kStatus_FTFx_ProtectionViolation The program/erase operation is requested to execute on protected areas.
+ * @retval #kStatus_FTFx_RecoverFlexramAsRamError Failed to recover the FlexRAM as RAM.
  */
-status_t FLASH_IsExecuteOnly(flash_config_t *config,
-                             uint32_t start,
-                             uint32_t lengthInBytes,
-                             flash_xacc_state_t *access_state);
-#endif /* FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL */
+status_t FLEXNVM_EepromWrite(flexnvm_config_t *config, uint32_t start, uint8_t *src, uint32_t lengthInBytes);
 
 /*!
- * @brief Sets the PFlash Protection to the intended protection status.
+ * @name Flash Protection Utilities
+ * @{
+ */
+
+/*!
+ * @brief Sets the DFlash protection to the intended protection status.
  *
- * @param config A pointer to storage for the driver runtime state.
- * @param protectStatus The expected protect status to set to the PFlash protection register. Each bit is
- * corresponding to protection of 1/32(64) of the total PFlash. The least significant bit is corresponding to the lowest
- * address area of PFlash. The most significant bit is corresponding to the highest address area of PFlash. There are
+ * @param config A pointer to the storage for the driver runtime state.
+ * @param protectStatus The expected protect status to set to the DFlash protection register. Each bit
+ * corresponds to the protection of the 1/8 of the total DFlash. The least significant bit corresponds to the lowest
+ * address area of the DFlash. The most significant bit corresponds to the highest address area of  the DFlash. There
+ * are
  * two possible cases as shown below:
  *       0: this area is protected.
  *       1: this area is unprotected.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the specified FLASH region is protected.
+ * @retval #kStatus_FTFx_Success API was executed successfully; the specified DFlash region is protected.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
+ * @retval #kStatus_FTFx_CommandNotSupported Flash API is not supported.
  * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
  */
-status_t FLASH_PflashSetProtection(flash_config_t *config, pflash_prot_status_t *protectStatus);
+status_t FLEXNVM_DflashSetProtection(flexnvm_config_t *config, uint8_t protectStatus);
 
 /*!
- * @brief Gets the PFlash protection status.
+ * @brief Gets the DFlash protection status.
  *
  * @param config A pointer to the storage for the driver runtime state.
- * @param protectStatus  Protect status returned by the PFlash IP. Each bit is corresponding to the protection of
- * 1/32(64)
- * of the
- * total PFlash. The least significant bit corresponds to the lowest address area of the PFlash. The most significant
- * bit corresponds to the highest address area of PFlash. There are two possible cases as shown below:
+ * @param protectStatus  DFlash Protect status returned by the PFlash IP. Each bit corresponds to the protection of the
+ * 1/8 of
+ * the total DFlash. The least significant bit corresponds to the lowest address area of the DFlash. The most
+ * significant bit corresponds to the highest address area of the DFlash, and so on. There are two possible cases as
+ * below:
  *       0: this area is protected.
  *       1: this area is unprotected.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the Protection state was stored to protectStatus;
+ * @retval #kStatus_FTFx_Success API was executed successfully.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
+ * @retval #kStatus_FTFx_CommandNotSupported Flash API is not supported.
  */
-status_t FLASH_PflashGetProtection(flash_config_t *config, pflash_prot_status_t *protectStatus);
+status_t FLEXNVM_DflashGetProtection(flexnvm_config_t *config, uint8_t *protectStatus);
+
+/*!
+ * @brief Sets the EEPROM protection to the intended protection status.
+ *
+ * @param config A pointer to the storage for the driver runtime state.
+ * @param protectStatus The expected protect status to set to the EEPROM protection register. Each bit
+ * corresponds to the protection of the 1/8 of the total EEPROM. The least significant bit corresponds to the lowest
+ * address area of the EEPROM. The most significant bit corresponds to the highest address area of EEPROM, and so on.
+ * There are two possible cases as shown below:
+ *       0: this area is protected.
+ *       1: this area is unprotected.
+ *
+ * @retval #kStatus_FTFx_Success API was executed successfully.
+ * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
+ * @retval #kStatus_FTFx_CommandNotSupported Flash API is not supported.
+ * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
+ */
+status_t FLEXNVM_EepromSetProtection(flexnvm_config_t *config, uint8_t protectStatus);
+
+/*!
+ * @brief Gets the EEPROM protection status.
+ *
+ * @param config A pointer to the storage for the driver runtime state.
+ * @param protectStatus  DFlash Protect status returned by the PFlash IP. Each bit corresponds to the protection of the
+ * 1/8 of
+ * the total EEPROM. The least significant bit corresponds to the lowest address area of the EEPROM. The most
+ * significant bit corresponds to the highest address area of the EEPROM. There are two possible cases as below:
+ *       0: this area is protected.
+ *       1: this area is unprotected.
+ *
+ * @retval #kStatus_FTFx_Success API was executed successfully.
+ * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
+ * @retval #kStatus_FTFx_CommandNotSupported Flash API is not supported.
+ */
+status_t FLEXNVM_EepromGetProtection(flexnvm_config_t *config, uint8_t *protectStatus);
 
 /*@}*/
 
@@ -639,18 +548,18 @@ status_t FLASH_PflashGetProtection(flash_config_t *config, pflash_prot_status_t 
  */
 
 /*!
- * @brief Returns the desired flash property.
+ * @brief Returns the desired flexnvm property.
  *
  * @param config A pointer to the storage for the driver runtime state.
  * @param whichProperty The desired property from the list of properties in
- *        enum flash_property_tag_t
- * @param value A pointer to the value returned for the desired flash property.
+ *        enum flexnvm_property_tag_t
+ * @param value A pointer to the value returned for the desired flexnvm property.
  *
- * @retval #kStatus_FTFx_Success API was executed successfully; the flash property was stored to value.
+ * @retval #kStatus_FTFx_Success API was executed successfully.
  * @retval #kStatus_FTFx_InvalidArgument An invalid argument is provided.
  * @retval #kStatus_FTFx_UnknownProperty An unknown property tag.
  */
-status_t FLASH_GetProperty(flash_config_t *config, flash_property_tag_t whichProperty, uint32_t *value);
+status_t FLEXNVM_GetProperty(flexnvm_config_t *config, flexnvm_property_tag_t whichProperty, uint32_t *value);
 
 /*@}*/
 
@@ -660,4 +569,4 @@ status_t FLASH_GetProperty(flash_config_t *config, flash_property_tag_t whichPro
 
 /*! @}*/
 
-#endif /* FSL_FTFX_FLASH_H */
+#endif /* FSL_FTFX_FLEXNVM_H */
