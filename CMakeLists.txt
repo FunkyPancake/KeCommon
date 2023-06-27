@@ -9,19 +9,23 @@ add_library(KeCommon
         nxp/source/semihost_hardfault.c
         nxp/source/cpp_config.cpp
         nxp/startup/startup_mke16f16.cpp
-        DeviceDrivers/FlexCan/FlexCan.cpp
-        DeviceDrivers/LpSpi/LpSpi.cpp
-        DeviceDrivers/Tle9461/Tle9461.cpp
-        DeviceDrivers/LpUart/LpUart.cpp
-#        Utils/MapLookup/Custom1DMap.cpp
-#        Utils/MapLookup/Custom2DMap.cpp
-#        Utils/MapLookup/Ifl.c
-#        Utils/MapLookup/Ifx.c
-        Utils/Calibration/Calibration.cpp)
+        Bsw/DeviceDrivers/FlexCan/FlexCan.cpp
+        Bsw/DeviceDrivers/LpSpi/LpSpi.cpp
+        Bsw/DeviceDrivers/Tle9461/Tle9461.cpp
+        Bsw/DeviceDrivers/LpUart/LpUart.cpp
+    )
 
 target_include_directories(
         KeCommon
         PUBLIC
+        Bsw/Interfaces
+        nxp/device
+        nxp/CMSIS
+        nxp/source
+        Bsw/DeviceDrivers/FlexCan
+        Bsw/DeviceDrivers/LpSpi
+        Bsw/DeviceDrivers/Tle9461
+        Bsw/DeviceDrivers/LpUart
         Interfaces
         nxp/device
         nxp/CMSIS
@@ -36,6 +40,7 @@ target_include_directories(
 
 add_subdirectory(nxp/drivers)
 add_subdirectory(nxp/freertos)
+add_subdirectory(Bsw)
 
 target_compile_definitions(KeCommon
         PRIVATE
