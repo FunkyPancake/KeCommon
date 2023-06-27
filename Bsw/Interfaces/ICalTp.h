@@ -4,11 +4,11 @@
 
 #ifndef CANGPS_ICALTP_H
 #define CANGPS_ICALTP_H
-#include "Queue.h"
+#include "MyQueue.h"
 
 class ICalTp {
 public:
-    Queue RxQueue;
+    MyQueue RxQueue;
 };
 
 

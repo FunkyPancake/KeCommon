@@ -34,8 +34,8 @@ target_include_directories(
         DeviceDrivers/LpSpi
         DeviceDrivers/Tle9461
         DeviceDrivers/LpUart
-        Utils/MapLookup
-        Utils/Calibration
+        Bsw/Utils/MapLookup
+        Bsw/Utils/Calibration
 )
 
 add_subdirectory(nxp/drivers)

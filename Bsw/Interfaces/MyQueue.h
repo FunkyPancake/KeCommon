@@ -2,14 +2,10 @@
 // Created by PC on 27.06.2023.
 //
 
-#ifndef CANGPS_QUEUE_H
-#define CANGPS_QUEUE_H
+#ifndef CANGPS_MYQUEUE_H
+#define CANGPS_MYQUEUE_H
 
-
-#include "IQueue.h"
-
-class Queue
-: IQueue {
+class MyQueue{
 public:
 
 uint8_t Peek(int i) {
@@ -29,4 +25,4 @@ std::vector <uint8_t> Dequeue(int i) {
 };
 
 
-#endif //CANGPS_QUEUE_H
+#endif //CANGPS_MYQUEUE_H
