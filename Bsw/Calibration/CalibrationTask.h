@@ -2,26 +2,24 @@
 // Created by PC on 27.06.2023.
 //
 
-#ifndef CANGPS_CALIBRATIONTASK_H
-#define CANGPS_CALIBRATIONTASK_H
+#ifndef CALIBRATIONTASK_H
+#define CALIBRATIONTASK_H
 
 #include <utility>
 
 #include "Calibration.h"
 #include "CalibrationCommand.h"
-#include "ICalTp.h"
 
-namespace KeCommon::Bsw::Calibration {
-    class CalibrationTask {
-    private:
-        ICalTp _tp;
-    public:
-        explicit CalibrationTask(ICalTp calTp): _tp(std::move(calTp))   {
-        }
+//namespace KeCommon::Bsw::Calibration {
+//    class CalibrationTask {
+//    private:
+//        Internal::Calibration _calibration;
+//    public:
+//        explicit CalibrationTask(ICalTp calTp) : _calibration(calTp) {
+//        }
+//
+//        void Task();
+//    };
+//}
 
-        void Task();
-
-    };
-}
-
-#endif //CANGPS_CALIBRATIONTASK_H
+#endif //CALIBRATIONTASK_H

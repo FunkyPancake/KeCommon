@@ -2,46 +2,45 @@
 // Created by PC on 27.06.2023.
 //
 
-#ifndef CANGPS_CALIBRATION_H
-#define CANGPS_CALIBRATION_H
+#ifndef CALIBRATION_H
+#define CALIBRATION_H
 
 
 #include <map>
 #include <vector>
+#include <memory>
 #include "CalibrationCommand.h"
 #include "CalibrationTask.h"
 #include "CalibrationCommand.h"
 #include "CommandId.h"
-#include "ICalTp.h"
 
 namespace KeCommon::Bsw::Calibration::Internal {
     class Calibration {
     public:
-        explicit Calibration(ICalTp tp);
+        explicit Calibration();
 
         bool TryDequeueCmd(Internal::CalibrationCommand &command);
 
-        void ProcessCommand(Internal::CalibrationCommand command);
+        void ProcessCommand(const std::unique_ptr<Internal::CalibrationCommand>& command);
 
 
     private:
-        ICalTp _tp;
 
         const std::map<Internal::CommandId, bool (Calibration::*)(const Internal::CalibrationCommand &)> _commandMap;
 
-        bool ProcessConnect(const Internal::CalibrationCommand &command);
-
-        bool ProcessDisconnect(const Internal::CalibrationCommand &command);
+        bool SessionControl(const Internal::CalibrationCommand &command);
 
         bool _connected;
 
         void SendNegativeResponse();
 
-        uint16_t CalcCrc(std::vector<uint8_t> vector1, std::vector<int8_t> vector2);
+        uint16_t CalcCrc(std::vector<uint8_t> header, std::vector<int8_t> payload);
 
         CalibrationCommand ParseCommand(const std::vector<int8_t> &vector1);
+
+        bool ReadMemoryByAddress(const CalibrationCommand &command);
     };
 }
 
 
-#endif //CANGPS_CALIBRATION_H
+#endif //CALIBRATION_H

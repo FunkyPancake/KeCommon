@@ -6,9 +6,6 @@
 #define CANGPS_BOOTLOADER_H
 
 
-class Bootloader {
-
-};
-
+void JumpToFbl();
 
 #endif //CANGPS_BOOTLOADER_H

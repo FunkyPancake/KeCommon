@@ -8,6 +8,7 @@ target_sources(
         PRIVATE
         Calibration/Calibration.cpp
         Calibration/CalibrationTask.cpp
+        Calibration/CanTp.cpp
 )
 
 target_include_directories(

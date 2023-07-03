@@ -2,14 +2,14 @@
 // Created by PC on 27.06.2023.
 //
 
+#include <memory>
 #include "CalibrationTask.h"
 
-void KeCommon::Bsw::Calibration::CalibrationTask::Task() {
-    auto _cal = Calibration::Internal::Calibration(_tp);
-    Internal::CalibrationCommand command{};
-    if (_cal.TryDequeueCmd(command)) {
-        _cal.ProcessCommand(command);
-    }
-
-
-}
+using namespace KeCommon::Bsw::Calibration;
+//
+//void CalibrationTask::Task() {
+//    std::unique_ptr<Internal::CalibrationCommand> command;
+//    if (_calibration.TryDequeueCmd(*command)) {
+//        _calibration.ProcessCommand(command);
+//    }
+//}
