@@ -5,13 +5,13 @@
 #ifndef CALIBRATIONCOMMAND_H
 #define CALIBRATIONCOMMAND_H
 
-#include "CommandId.h"
+#include "SId.h"
 
-namespace KeCommon::Bsw::Calibration::Internal {
+namespace KeCommon::Bsw::Cal::Internal {
     class CalibrationCommand {
 
     public:
-        CommandId sid;
+        SId sid;
         std::vector<uint8_t> payload;
     };
 }

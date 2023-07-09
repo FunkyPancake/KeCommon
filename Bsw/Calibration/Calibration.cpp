@@ -7,39 +7,31 @@
 #include "../Bootloader/Bootloader.h"
 
 uint8_t StartByte = 0x5a;
-using namespace KeCommon::Bsw::Calibration::Internal;
+using namespace KeCommon::Bsw::Cal;
+using namespace KeCommon::Bsw::Cal::Internal;
 
-void Calibration::ProcessCommand(const std::unique_ptr<Internal::CalibrationCommand> &command) {
-    if (auto search = _commandMap.find(command->sid); search != _commandMap.end()) {
-        auto handler = search->second;
-        auto result = (this->*handler)(*command);
-    }
 
-}
-
-bool Calibration::TryDequeueCmd(Internal::CalibrationCommand &command) {
+Calibration::Calibration(const IDoxTp *iDoxTp) : doxTp(const_cast<IDoxTp *>(iDoxTp)), _connected(false), _busy(false),
+                                                 _commandMap(
+                                                         {{Internal::SId::Connect,    &Calibration::SessionControl},
+                                                          {Internal::SId::Disconnect, &Calibration::ReadMemoryByAddress}
+                                                         }) {
 
 }
 
-Calibration::Calibration() : _commandMap({{CommandId::Connect, &Calibration::SessionControl},
-                                                            {CommandId::Disconnect, &Calibration::ReadMemoryByAddress}
-                                                           }), _connected(false) {
-
-}
-
-bool Calibration::SessionControl(const Internal::CalibrationCommand &command) {
-    if(command.payload[0] == 0x01){
+bool Calibration::SessionControl(const std::vector<uint8_t> &command) {
+    auto subFun = command[0];
+    if (subFun == 0x01) {
         _connected = true;
     }
-    if(command.payload[0] == 0x02)
-    {
+    if (subFun == 0x02) {
         JumpToFbl();
     }
     return false;
 }
 
 
-bool Calibration::ReadMemoryByAddress(const CalibrationCommand &command) {
+bool Calibration::ReadMemoryByAddress(const std::vector<uint8_t> &command) {
     _connected = false;
     return false;
 }
@@ -52,3 +44,19 @@ void Calibration::SendNegativeResponse() {
 CalibrationCommand Calibration::ParseCommand(const std::vector<int8_t> &vector1) {
     return CalibrationCommand();
 }
+
+void Calibration::CalTask() {
+    if (!_busy) {
+        if (doxTp->RxCmdAvailable()) {
+            auto command = doxTp->ReadCommand();
+            auto sid = (Internal::SId) command[0];
+            if (auto search = _commandMap.find(sid); search != _commandMap.end()) {
+                auto handler = search->second;
+                auto result = (this->*handler)(command);
+            }
+        }
+    }
+
+}
+
+
