@@ -84,6 +84,7 @@ void CanTp::TxTask() {
         _txRdy = false;
     } else {
         //Transmission already in progress
+        //TODO: Check if flowControl frame was received and sending is allowed
         _txCnt += 1;
         _txCnt &= 0x0f;
         payload.b[0] = 0x20 + _txCnt;

@@ -65,11 +65,10 @@ FlexCan::FlexCan(CAN_Type *canBase, int mailboxCount) {
 
 void FlexCan::RxTask() {
     for (const auto &id: _registeredRxMb) {
-        if(FLEXCAN_GetMbStatusFlags(canBase,1<<id.first) == static_cast<uint32_t>(1<<static_cast<uint32_t>(id.first)))
-        {
-            _flexcan_frame frame;
+        if (FLEXCAN_GetMbStatusFlags(canBase, 1 << id.first) == 1 << id.first) {
+            _flexcan_frame frame{};
             FLEXCAN_ReadRxMb(canBase, id.first, &frame);
-            FLEXCAN_ClearMbStatusFlags(canBase,1<<id.first);
+            FLEXCAN_ClearMbStatusFlags(canBase, 1 << id.first);
             auto iCanFrame = ToICanFrame(frame);
             id.second(iCanFrame);
         }
@@ -78,7 +77,7 @@ void FlexCan::RxTask() {
     }
 }
 
-void FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>& handler) {
+void FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler) {
     _flexcan_rx_mb_config config = {.type = kFLEXCAN_FrameTypeData};
     auto mbId = (uint8_t) _registeredRxMb.size() + 1;
     if ((id & CanIdExtBit) == CanIdExtBit) {
