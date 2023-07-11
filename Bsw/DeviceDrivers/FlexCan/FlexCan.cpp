@@ -58,8 +58,8 @@ void FlexCan::WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data,
     }
 }
 
-FlexCan::FlexCan(int mailboxCount) {
-    canBase = CAN0;// only single CAN peripheral is in this MCU family
+FlexCan::FlexCan(CAN_Type *canBase, int mailboxCount) {
+    this->canBase = canBase;// only single CAN peripheral is in this MCU family
     this->mailboxCount = mailboxCount;
 }
 

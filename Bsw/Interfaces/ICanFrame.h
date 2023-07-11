@@ -8,12 +8,13 @@
 #include <cstdint>
 
 namespace KeCommon::Bsw::Can {
+    constexpr uint32_t CanIdExtBit = 0x80000000;
+
     typedef union {
         uint8_t b[8];
         uint16_t s[4];
         uint32_t w[2];
     } Payload;
-    constexpr uint32_t CanIdExtBit = 0x80000000;
 
     typedef struct {
         uint32_t id;

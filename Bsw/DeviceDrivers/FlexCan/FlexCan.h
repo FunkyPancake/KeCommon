@@ -31,7 +31,7 @@ namespace KeCommon::Bsw::Can {
             std::reverse(tmp.begin(), tmp.end());
             return *(T *) tmp.data();
         }
-        explicit FlexCan(int mailboxCount);
+        explicit FlexCan(CAN_Type *canBase, int mailboxCount);
 
         void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>& handler);
 

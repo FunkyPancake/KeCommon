@@ -5,7 +5,7 @@
 #include <memory>
 #include "CalibrationTask.h"
 
-using namespace KeCommon::Bsw::Calibration;
+//using namespace KeCommon::Bsw::Calibration;
 //
 //void CalibrationTask::Task() {
 //    std::unique_ptr<Internal::CalibrationCommand> command;

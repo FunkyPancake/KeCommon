@@ -4,6 +4,7 @@
 
 #ifndef ICALTP_H
 #define ICALTP_H
+#include "vector"
 namespace KeCommon::Bsw::Cal {
     class IDoxTp {
     public:
@@ -13,7 +14,7 @@ namespace KeCommon::Bsw::Cal {
 
         virtual bool RxCmdAvailable() = 0;
 
-        virtual bool WriteCommand(std::vector<uint8_t> data) = 0;
+        virtual bool Write(std::vector<uint8_t>& data) = 0;
 
         virtual std::vector<uint8_t> ReadCommand() = 0;
     };

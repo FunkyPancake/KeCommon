@@ -25,7 +25,7 @@ bool Calibration::SessionControl(const std::vector<uint8_t> &command) {
         _connected = true;
     }
     if (subFun == 0x02) {
-        JumpToFbl();
+//        JumpToFbl();
     }
     return false;
 }
@@ -40,10 +40,10 @@ bool Calibration::ReadMemoryByAddress(const std::vector<uint8_t> &command) {
 void Calibration::SendNegativeResponse() {
 
 }
-
-CalibrationCommand Calibration::ParseCommand(const std::vector<int8_t> &vector1) {
-    return CalibrationCommand();
-}
+//
+//CalibrationCommand Calibration::ParseCommand(const std::vector<int8_t> &vector1) {
+//    return CalibrationCommand();
+//}
 
 void Calibration::CalTask() {
     if (!_busy) {
