@@ -8,24 +8,30 @@
 #ifndef CDD_CAN_IL_H_
 #define CDD_CAN_IL_H_
 
-#include <map>
+#include "FreeRTOS.h"
 #include "ICan.h"
 #include "fsl_flexcan.h"
+#include "semphr.h"
+#include <map>
 
-namespace KeCommon::Bsw::Can {
-    class FlexCan : public ICan {
+namespace KeCommon::Bsw::Can
+{
+    class FlexCan : public ICan
+    {
     private:
-        int mailboxCount;
-        CAN_Type *canBase;
-
+        static constexpr int MutexWaitTime = 100;
+        int _mailboxCount;
+        CAN_Type *_canBase;
+        SemaphoreHandle_t _mutex;
         static void WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc);
 
-        std::map<uint8_t,std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>> _registeredRxMb;
+        std::map<uint8_t, std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>> _registeredRxMb;
         static ICanFrame ToICanFrame(const _flexcan_frame &frame);
 
     public:
-        template<typename T> static
-        T SwapBytes(T data) {
+        template<typename T>
+        static T SwapBytes(T data)
+        {
             std::array<uint8_t, sizeof(T)> tmp{};
             *(T *) tmp.data() = data;
             std::reverse(tmp.begin(), tmp.end());
@@ -33,7 +39,7 @@ namespace KeCommon::Bsw::Can {
         }
         explicit FlexCan(CAN_Type *canBase, int mailboxCount);
 
-        void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>& handler);
+        void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler);
 
         bool Send(uint32_t id, Payload &data, uint8_t dlc) override;
 
@@ -42,8 +48,7 @@ namespace KeCommon::Bsw::Can {
         bool SendCyclic();
 
         void RxTask();
-
     };
-}
+}// namespace KeCommon::Bsw::Can
 
 #endif /* CDD_CAN_IL_H_ */
