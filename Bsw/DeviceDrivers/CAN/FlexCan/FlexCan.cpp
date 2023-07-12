@@ -75,7 +75,7 @@ FlexCan::FlexCan(CAN_Type *canBase, int mailboxCount)
 void FlexCan::RxTask()
 {
     for (const auto &id : _registeredRxMb) {
-        _flexcan_frame frame;
+        _flexcan_frame frame{};
         if(FLEXCAN_ReadRxMb(_canBase,id.first,&frame) != kStatus_Fail)
         {
             _canBase->MB[id.first].CS =   (~CAN_CS_CODE_MASK & _canBase->MB[id.first].CS) |CAN_CS_CODE(0x4);
