@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ISpi.h"
+#include "../SPI/ISpi.h"
 #include <stdint.h>
 
 class Tle9461

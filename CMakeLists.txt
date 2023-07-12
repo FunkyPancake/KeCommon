@@ -9,10 +9,10 @@ add_library(KeCommon
         nxp/source/semihost_hardfault.c
         nxp/source/cpp_config.cpp
         nxp/startup/startup_mke16f16.cpp
-        Bsw/DeviceDrivers/FlexCan/FlexCan.cpp
-        Bsw/DeviceDrivers/LpSpi/LpSpi.cpp
+        Bsw/DeviceDrivers/CAN/FlexCan/FlexCan.cpp
+        Bsw/DeviceDrivers/SPI/LpSpi/LpSpi.cpp
         Bsw/DeviceDrivers/Tle9461/Tle9461.cpp
-        Bsw/DeviceDrivers/LpUart/LpUart.cpp
+        Bsw/DeviceDrivers/UART/LpUart/LpUart.cpp
     )
 
 target_include_directories(
@@ -22,10 +22,10 @@ target_include_directories(
         nxp/device
         nxp/CMSIS
         nxp/source
-        Bsw/DeviceDrivers/FlexCan
-        Bsw/DeviceDrivers/LpSpi
+        Bsw/DeviceDrivers/CAN/FlexCan
+        Bsw/DeviceDrivers/SPI/LpSpi
         Bsw/DeviceDrivers/Tle9461
-        Bsw/DeviceDrivers/LpUart
+        Bsw/DeviceDrivers/UART/LpUart
         Interfaces
         nxp/device
         nxp/CMSIS

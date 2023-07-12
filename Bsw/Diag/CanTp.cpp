@@ -2,15 +2,16 @@
 // Created by PC on 02.07.2023.
 //
 
+#include "CanTp.h"
+#include "../DeviceDrivers/CAN/ICan.h"
 #include <array>
 #include <cstring>
-#include "CanTp.h"
-#include "ICan.h"
 
 using namespace KeCommon::Bsw::Can;
-using namespace KeCommon::Bsw::Cal;
+using namespace KeCommon::Bsw::Diag;
 
-void CanTp::ProcessFrame(const ICanFrame &frame) {
+void CanTp::ProcessFrame(const ICanFrame &frame)
+{
     auto frameType = frame.payload.b[0] >> 4;
     if (frameType == 0) {
         ProcessSingleFrame(frame);
@@ -26,41 +27,35 @@ void CanTp::ProcessFrame(const ICanFrame &frame) {
     }
 }
 
-void CanTp::ProcessSingleFrame(const ICanFrame &frame) {
-    std::memcpy((void *) (frame.payload.b), (void *) _txBuf.data(), frame.dlc);
-    _commandAvailable = true;
+void CanTp::ProcessSingleFrame(const ICanFrame &frame)
+{
+    auto len = frame.payload.b[0];
+    std::memcpy(_rxBuf.data(), (frame.payload.b + 1), len);
+    _rxBufPtr = len;
+    _rxRdy = true;
 }
 
-void CanTp::ProcessFirstFrame(const ICanFrame &frame) {
-
+void CanTp::ProcessFirstFrame(const ICanFrame &frame)
+{
 }
 
-void CanTp::ProcessConsecutiveFreame(const ICanFrame &frame) {
-
+void CanTp::ProcessConsecutiveFreame(const ICanFrame &frame)
+{
 }
 
-void CanTp::ProcessFlowControlFrame(const ICanFrame &frame) {
-
+void CanTp::ProcessFlowControlFrame(const ICanFrame &frame)
+{
 }
 
-CanTp::CanTp(ICan &can, uint32_t rxId, uint32_t txId) : _can(can), _txId(txId) {
+CanTp::CanTp(ICan &can, uint32_t rxId, uint32_t txId)
+    : _can(can), _txId(txId)
+{
     auto f = [this](auto &&PH1) { ProcessFrame(std::forward<decltype(PH1)>(PH1)); };
     can.RegisterRxFrame(rxId, f);
 }
 
-bool CanTp::CommandAvailable() {
-    return _commandAvailable;
-}
-
-std::vector<uint8_t> CanTp::GetCmd() {
-    return std::vector<uint8_t>();
-}
-
-void CanTp::SendCmd() {
-
-}
-
-void CanTp::TxTask() {
+void CanTp::TxMainFunction()
+{
     if (_txMsgLen == 0) {
         return;
     }
@@ -73,7 +68,8 @@ void CanTp::TxTask() {
             payload.b[0] = _txMsgLen;
             std::memcpy(&(payload.b[1]), _txBuf.data(), _txMsgLen);
             _txBufPtr += _txMsgLen;
-        } else {
+        }
+        else {
             //Send First frame packet
             payload.b[0] = 0x10 + (_txMsgLen >> 8);
             payload.b[1] = 0xff & _txMsgLen;
@@ -82,7 +78,8 @@ void CanTp::TxTask() {
             _txBufPtr += MaxPayloadSizeFirstFrame;
         }
         _txRdy = false;
-    } else {
+    }
+    else {
         //Transmission already in progress
         //TODO: Check if flowControl frame was received and sending is allowed
         _txCnt += 1;
@@ -91,7 +88,6 @@ void CanTp::TxTask() {
         auto size = std::min((_txMsgLen - _txBufPtr), MaxPayloadSizeFrame);
         memcpy(&(payload.b[1]), _txBuf.data() + _txBufPtr, size);
         _txBufPtr += size;
-
     }
     _can.Send(_txId, payload, FrameDlc);
     if (_txBufPtr >= _txMsgLen) {
@@ -101,15 +97,18 @@ void CanTp::TxTask() {
     }
 }
 
-bool CanTp::TxRdy() {
+bool CanTp::TxRdy()
+{
     return _txRdy;
 }
 
-bool CanTp::RxCmdAvailable() {
-    return false;
+bool CanTp::RxRdy()
+{
+    return _rxRdy;
 }
 
-bool CanTp::Write(std::vector<uint8_t> &data) {
+bool CanTp::Write(std::vector<uint8_t> &data)
+{
     if (data.size() > _txBuf.size() || !_txRdy) {
         return false;
     }
@@ -120,6 +119,10 @@ bool CanTp::Write(std::vector<uint8_t> &data) {
     return true;
 }
 
-std::vector<uint8_t> CanTp::ReadCommand() {
-    return std::vector<uint8_t>();
+std::vector<uint8_t> CanTp::Read()
+{
+    auto response = std::vector<uint8_t>(_rxBuf.begin(), _rxBuf.begin() + _rxBufPtr);
+    _rxBufPtr = 0;
+    _rxRdy = false;
+    return response;
 }

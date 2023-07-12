@@ -4,19 +4,23 @@
 
 #ifndef ICALTP_H
 #define ICALTP_H
+#include "cstdint"
 #include "vector"
-namespace KeCommon::Bsw::Cal {
-    class IDoxTp {
+
+namespace KeCommon::Bsw::Diag
+{
+    class IDoXTp
+    {
     public:
-        virtual ~IDoxTp() = default;
+        virtual ~IDoXTp() = default;
 
         virtual bool TxRdy() = 0;
 
-        virtual bool RxCmdAvailable() = 0;
+        virtual bool RxRdy() = 0;
 
         virtual bool Write(std::vector<uint8_t>& data) = 0;
 
-        virtual std::vector<uint8_t> ReadCommand() = 0;
+        virtual std::vector<uint8_t> Read() = 0;
     };
 }
 #endif //ICALTP_H

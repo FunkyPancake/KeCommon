@@ -8,8 +8,8 @@
 #ifndef CDD_CAN_IL_H_
 #define CDD_CAN_IL_H_
 
+#include "../ICan.h"
 #include "FreeRTOS.h"
-#include "ICan.h"
 #include "fsl_flexcan.h"
 #include "semphr.h"
 #include <map>
@@ -39,7 +39,7 @@ namespace KeCommon::Bsw::Can
         }
         explicit FlexCan(CAN_Type *canBase, int mailboxCount);
 
-        void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler);
+        void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler)override;
 
         bool Send(uint32_t id, Payload &data, uint8_t dlc) override;
 

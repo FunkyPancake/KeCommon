@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ISpi.h"
+#include "../ISpi.h"
 #include "fsl_lpspi_freertos.h"
 #include <array>
 #include <vector>

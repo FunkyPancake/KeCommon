@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <IUart.h>
+#include "../IUart.h"
 #include <fsl_lpuart_freertos.h>
 
 class LpUart : public IUart

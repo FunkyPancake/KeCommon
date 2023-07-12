@@ -6,9 +6,8 @@ project(Bsw LANGUAGES CXX C)
 target_sources(
         ${TARGET_NAME}
         PRIVATE
-        Calibration/Calibration.cpp
-        Calibration/CalibrationTask.cpp
-        Calibration/CanTp.cpp
+        Diag/CanTp.cpp
+        Diag/Uds.cpp
 )
 
 target_include_directories(
