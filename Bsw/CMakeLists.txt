@@ -8,6 +8,7 @@ target_sources(
         PRIVATE
         Diag/CanTp.cpp
         Diag/Uds.cpp
+        Bootloader/Bootloader.c
 )
 
 target_include_directories(

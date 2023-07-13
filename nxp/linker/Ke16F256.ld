@@ -49,6 +49,14 @@ SECTIONS
 
         *(.after_vectors*)
 
+        /* Kinetis Bootloader Configuration data */
+        . = 0x3C0 ;
+        PROVIDE(__BOOTLOADER_CONFIG_START__ = .) ;
+        KEEP(*(.BootloaderConfig))
+        PROVIDE(__BOOTLOADER_CONFIG_END__ = .) ;
+        ASSERT(!(__BOOTLOADER_CONFIG_START__ == __BOOTLOADER_CONFIG_END__), "Linker Bootloader Config Support Enabled, but no .BootloaderConfig section provided within application");
+        /* End of Kinetis Bootloader Configuration data */
+
         /* Kinetis Flash Configuration data */
         . = 0x400 ;
         PROVIDE(__FLASH_CONFIG_START__ = .) ;
