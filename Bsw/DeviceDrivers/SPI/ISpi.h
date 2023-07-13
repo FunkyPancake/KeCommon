@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ICom.h"
+#include "../ICom.h"
 #include <cstdint>
 
 class ISpi :public ICom

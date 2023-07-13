@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <IUart.h>
+#include "../IUart.h"
 #include <fsl_lpuart_freertos.h>
 
 class LpUart : public IUart
@@ -16,6 +16,6 @@ public:
     LpUart(lpuart_rtos_handle_t* handle, lpuart_rtos_config_t *config);
     std::vector<uint8_t> ReadBytes(uint16_t size) override;
     bool WriteBytes(const std::vector<uint8_t>& data)override;
-    void SetBaudrate(uint32_t baudrate);
+    void SetBaudrate(uint32_t baudrate) override;
 };
 

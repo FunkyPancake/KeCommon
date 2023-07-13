@@ -14,10 +14,12 @@ target_sources(KeCommon PRIVATE
         fsl_lpspi.c
         fsl_smc.c
         fsl_lpuart.c
+        fsl_lpuart_edma.c
+        fsl_ftm.c
         freertos/fsl_lpspi_freertos.c
         freertos/fsl_lpuart_freertos.c
-    )
+        )
 target_include_directories(KeCommon PUBLIC
         .
         freertos
-    )
+        )
