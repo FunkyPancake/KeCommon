@@ -14,7 +14,17 @@
  *
  * The CPU macro should be declared in the project or makefile.
  */
-#if (defined(CPU_MKE16F256VLH16) || defined(CPU_MKE16F256VLL16) || defined(CPU_MKE16F512VLH16) || \
+#if (defined(CPU_MKE18F256VLH16) || defined(CPU_MKE18F256VLL16) || defined(CPU_MKE18F512VLH16) || \
+    defined(CPU_MKE18F512VLL16))
+
+        #define KE18F16_SERIES
+
+        /* CMSIS-style register definitions */
+        #include "MKE18F16.h"
+        /* CPU specific feature definitions */
+        #include "MKE18F16_features.h"
+
+#elif (defined(CPU_MKE16F256VLH16) || defined(CPU_MKE16F256VLL16) || defined(CPU_MKE16F512VLH16) || \
     defined(CPU_MKE16F512VLL16))
 
 #define KE16F16_SERIES

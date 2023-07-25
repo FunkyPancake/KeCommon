@@ -195,7 +195,7 @@ status_t FLEXNVM_DflashProgram(flexnvm_config_t *config, uint32_t start, uint8_t
  * @param config A pointer to the storage for the driver runtime state.
  * @param start The start address of the desired flash memory to be programmed. Must be
  *              word-aligned.
- * @param source A pointer to the source buffer of data that is to be programmed
+ * @param src A pointer to the source buffer of data that is to be programmed
  *            into the flash.
  * @param lengthInBytes The length, given in bytes (not words or long-words),
  *                      to be programmed. Must be word-aligned.
@@ -213,7 +213,7 @@ status_t FLEXNVM_DflashProgram(flexnvm_config_t *config, uint32_t start, uint8_t
  * @retval #kStatus_FTFx_CommandFailure Run-time error during command execution.
  * @retval #kStatus_FTFx_RecoverFlexramAsEepromError Failed to recover FlexRAM as EEPROM.
  */
-status_t FLEXNVM_DflashProgramSection(flexnvm_config_t *config, uint32_t start, uint8_t *source, uint32_t lengthInBytes);
+status_t FLEXNVM_DflashProgramSection(flexnvm_config_t *config, uint32_t start, uint8_t *src, uint32_t lengthInBytes);
 #endif /* FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD */
 
 /*!

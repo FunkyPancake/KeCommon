@@ -73,7 +73,7 @@ extern volatile uint32_t g_xtal32Freq;
 
 /* Definition for delay API in clock driver, users can redefine it to the real application. */
 #ifndef SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY
-#define SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY (48000000UL)
+#define SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY (120000000UL)
 #endif
 /*! @brief Clock ip name array for DMAMUX. */
 #define DMAMUX_CLOCKS  \
@@ -1217,7 +1217,7 @@ uint32_t CLOCK_GetSysPllMultDiv(uint32_t refFreq, uint32_t desireFreq, uint8_t *
  *                                            .div1 = kSCG_AsyncClkDivBy1,
  *                                            .div2 = kSCG_AsyncClkDisable,
  *                                            .div3 = kSCG_AsyncClkDivBy2,
- *                                            .source = kSCG_SysPllSrcFirc,
+ *                                            .src = kSCG_SysPllSrcFirc,
  *                                            .isBypassSelected = false,
  *                                            .isPfdSelected = false,
  *                                            .prediv = 5U,
