@@ -39,15 +39,23 @@ namespace KeCommon::Bsw::Can
         }
         explicit FlexCan(CAN_Type *canBase, int mailboxCount);
 
-        void RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler)override;
+        bool RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler) override;
 
-        bool Send(uint32_t id, Payload &data, uint8_t dlc) override;
+        void RegisterCyclicTxFrame(uint32_t id, uint32_t cycleTime) override;
+
+        bool Send(uint32_t id, const Payload &data, uint8_t dlc) override;
+        bool Send(const ICanFrame &frame) override;
 
         bool Receive(uint32_t *id, Payload *data, uint8_t dlc) override;
+        bool Receive(ICanFrame &frame) override;
 
-        bool SendCyclic();
 
-        void RxTask();
+        void UpdateCyclicFrame(uint32_t id, const Payload &data, uint8_t dlc) override;
+        void UpdateCyclicFrame(const ICanFrame &frame) override;
+
+        void RxTask() override;
+
+        void TxTask() override;
     };
 }// namespace KeCommon::Bsw::Can
 

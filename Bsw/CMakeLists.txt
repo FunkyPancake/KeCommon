@@ -15,4 +15,5 @@ target_include_directories(
         ${TARGET_NAME}
         PUBLIC
         Calibration
+        DeviceDrivers
 )
