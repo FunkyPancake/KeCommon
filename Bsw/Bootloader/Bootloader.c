@@ -97,8 +97,8 @@ typedef struct BootloaderConfiguration {
         .clockDivider = 0xff,                       //!< Use clock divider(0)
         .canConfig1 = 0x0f,
         .canConfig2 = 0x00,
-        .canTxId = 0x7F1,
-        .canRxId = 0x7F0};
+        .canTxId = DiagCanTxId,
+        .canRxId = DiagCanRxId};
 //Already define in startup
 ///* 16 bytes at address 0x400 */
 //    __attribute__((used, section(".FlashConfig"))) const uint32_t FOPTConfig[4] = {

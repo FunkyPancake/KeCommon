@@ -16,7 +16,7 @@ namespace KeCommon::Bsw::Diag
     public:
         void ProcessFrame(const KeCommon::Bsw::Can::ICanFrame &frame);
 
-        explicit CanTp(Can::ICan &can, uint32_t rxId, uint32_t txId);
+        explicit CanTp(Can::ICan &can);
 
         void TxMainFunction();
 

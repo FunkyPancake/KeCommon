@@ -3,7 +3,7 @@
 //
 
 #include "CanTp.h"
-#include "../DeviceDrivers/CAN/ICan.h"
+#include "../Bootloader/Bootloader.h"
 #include <array>
 #include <cstring>
 
@@ -47,11 +47,11 @@ void CanTp::ProcessFlowControlFrame(const ICanFrame &frame)
 {
 }
 
-CanTp::CanTp(ICan &can, uint32_t rxId, uint32_t txId)
-    : _can(can), _txId(txId)
+CanTp::CanTp(ICan &can)
+    : _can(can), _txId(DiagCanTxId)
 {
     auto f = [this](auto &&PH1) { ProcessFrame(std::forward<decltype(PH1)>(PH1)); };
-    can.RegisterRxFrame(rxId, f);
+    can.RegisterRxFrame(DiagCanRxId, f);
 }
 
 void CanTp::TxMainFunction()
