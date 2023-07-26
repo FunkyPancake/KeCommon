@@ -5,7 +5,7 @@
  *      Author: Mati
  */
 #include "FlexCan.h"
-#include "../ICanFrame.h"
+#include "../CanFrame.h"
 #include <functional>
 #include <utility>
 
@@ -19,7 +19,7 @@ FlexCan::FlexCan(CAN_Type *canBase, int mailboxCount)
     _mutex = xSemaphoreCreateMutex();
 }
 
-bool FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler)
+bool FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::CanFrame frame)> &handler)
 {
     int mbId;
     _flexcan_rx_mb_config config = {.type = kFLEXCAN_FrameTypeData};
@@ -72,7 +72,7 @@ bool FlexCan::Send(uint32_t id, const Payload &data, uint8_t dlc)
     return false;
 }
 
-bool FlexCan::Send(const ICanFrame &frame)
+bool FlexCan::Send(const CanFrame &frame)
 {
     return Send(frame.id, frame.payload, frame.dlc);
 }
@@ -90,7 +90,7 @@ bool FlexCan::Receive(uint32_t *id, Payload *data, uint8_t dlc)
     return false;
 }
 
-bool FlexCan::Receive(ICanFrame &frame)
+bool FlexCan::Receive(CanFrame &frame)
 {
     return Receive(&frame.id, &frame.payload, frame.dlc);
 }
@@ -99,7 +99,7 @@ void FlexCan::UpdateCyclicFrame(uint32_t id, const Payload &data, uint8_t dlc)
 {
 }
 
-void FlexCan::UpdateCyclicFrame(const ICanFrame &frame)
+void FlexCan::UpdateCyclicFrame(const CanFrame &frame)
 {
 }
 
@@ -137,9 +137,9 @@ void FlexCan::WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data,
     }
 }
 
-ICanFrame FlexCan::ToICanFrame(const _flexcan_frame &frame)
+CanFrame FlexCan::ToICanFrame(const _flexcan_frame &frame)
 {
-    auto iFrame = ICanFrame{.id = frame.id, .timestamp = frame.timestamp, .dlc = frame.length};
+    auto iFrame = CanFrame{.id = frame.id, .timestamp = frame.timestamp, .dlc = frame.length};
     iFrame.payload.w[0] = SwapBytes<uint32_t>(frame.dataWord0);
     iFrame.payload.w[1] = SwapBytes<uint32_t>(frame.dataWord1);
     return iFrame;

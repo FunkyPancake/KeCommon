@@ -10,7 +10,7 @@
 using namespace KeCommon::Bsw::Can;
 using namespace KeCommon::Bsw::Diag;
 
-void CanTp::ProcessFrame(const ICanFrame &frame)
+void CanTp::ProcessFrame(const CanFrame &frame)
 {
     auto frameType = frame.payload.b[0] >> 4;
     if (frameType == 0) {
@@ -27,7 +27,7 @@ void CanTp::ProcessFrame(const ICanFrame &frame)
     }
 }
 
-void CanTp::ProcessSingleFrame(const ICanFrame &frame)
+void CanTp::ProcessSingleFrame(const CanFrame &frame)
 {
     auto len = frame.payload.b[0];
     std::memcpy(_rxBuf.data(), (frame.payload.b + 1), len);
@@ -35,15 +35,15 @@ void CanTp::ProcessSingleFrame(const ICanFrame &frame)
     _rxRdy = true;
 }
 
-void CanTp::ProcessFirstFrame(const ICanFrame &frame)
+void CanTp::ProcessFirstFrame(const CanFrame &frame)
 {
 }
 
-void CanTp::ProcessConsecutiveFreame(const ICanFrame &frame)
+void CanTp::ProcessConsecutiveFreame(const CanFrame &frame)
 {
 }
 
-void CanTp::ProcessFlowControlFrame(const ICanFrame &frame)
+void CanTp::ProcessFlowControlFrame(const CanFrame &frame)
 {
 }
 

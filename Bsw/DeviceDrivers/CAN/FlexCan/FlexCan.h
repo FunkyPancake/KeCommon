@@ -25,8 +25,8 @@ namespace KeCommon::Bsw::Can
         SemaphoreHandle_t _mutex;
         static void WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc);
 
-        std::map<uint8_t, std::function<void(KeCommon::Bsw::Can::ICanFrame frame)>> _registeredRxMb;
-        static ICanFrame ToICanFrame(const _flexcan_frame &frame);
+        std::map<uint8_t, std::function<void(KeCommon::Bsw::Can::CanFrame frame)>> _registeredRxMb;
+        static CanFrame ToICanFrame(const _flexcan_frame &frame);
 
     public:
         template<typename T>
@@ -39,19 +39,19 @@ namespace KeCommon::Bsw::Can
         }
         explicit FlexCan(CAN_Type *canBase, int mailboxCount);
 
-        bool RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::ICanFrame frame)> &handler) override;
+        bool RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::CanFrame frame)> &handler) override;
 
         void RegisterCyclicTxFrame(uint32_t id, uint32_t cycleTime) override;
 
         bool Send(uint32_t id, const Payload &data, uint8_t dlc) override;
-        bool Send(const ICanFrame &frame) override;
+        bool Send(const CanFrame &frame) override;
 
         bool Receive(uint32_t *id, Payload *data, uint8_t dlc) override;
-        bool Receive(ICanFrame &frame) override;
+        bool Receive(CanFrame &frame) override;
 
 
         void UpdateCyclicFrame(uint32_t id, const Payload &data, uint8_t dlc) override;
-        void UpdateCyclicFrame(const ICanFrame &frame) override;
+        void UpdateCyclicFrame(const CanFrame &frame) override;
 
         void RxTask() override;
 

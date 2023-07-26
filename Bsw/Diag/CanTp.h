@@ -14,7 +14,7 @@ namespace KeCommon::Bsw::Diag
     class CanTp : public IDoXTp
     {
     public:
-        void ProcessFrame(const KeCommon::Bsw::Can::ICanFrame &frame);
+        void ProcessFrame(const KeCommon::Bsw::Can::CanFrame &frame);
 
         explicit CanTp(Can::ICan &can);
 
@@ -46,13 +46,13 @@ namespace KeCommon::Bsw::Diag
         bool _rxRdy{false};
         uint32_t _rxBufPtr{0};
 
-        void ProcessSingleFrame(const Can::ICanFrame &frame);
+        void ProcessSingleFrame(const Can::CanFrame &frame);
 
-        void ProcessFirstFrame(const Can::ICanFrame &frame);
+        void ProcessFirstFrame(const Can::CanFrame &frame);
 
-        void ProcessConsecutiveFreame(const Can::ICanFrame &frame);
+        void ProcessConsecutiveFreame(const Can::CanFrame &frame);
 
-        void ProcessFlowControlFrame(const Can::ICanFrame &frame);
+        void ProcessFlowControlFrame(const Can::CanFrame &frame);
     };
 }// namespace KeCommon::Bsw::Diag
 #endif//CANTP_H
