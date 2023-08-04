@@ -68,7 +68,7 @@ void Uds::MainFunction()
             auto sid = (Internal::SId) command[0];
             if (auto search = _commandMap.find(sid); search != _commandMap.end()) {
                 auto handler = search->second;
-                auto result = (this->*handler)(command);
+                (this->*handler)(command);
             }
             else {
                 SendNegativeResponse(sid, Internal::ResponseCode::ServiceNotSupported);

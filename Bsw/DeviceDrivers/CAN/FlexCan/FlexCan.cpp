@@ -19,7 +19,8 @@ FlexCan::FlexCan(CAN_Type *canBase, int mailboxCount)
     _mutex = xSemaphoreCreateMutex();
 }
 
-bool FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(KeCommon::Bsw::Can::CanFrame frame)> &handler)
+bool
+FlexCan::RegisterRxFrame(uint32_t id, const std::function<void(const KeCommon::Bsw::Can::CanFrame &frame)> &handler)
 {
     int mbId;
     _flexcan_rx_mb_config config = {.type = kFLEXCAN_FrameTypeData};
@@ -95,7 +96,7 @@ bool FlexCan::Receive(CanFrame &frame)
     return Receive(&frame.id, &frame.payload, frame.dlc);
 }
 
-void FlexCan::UpdateCyclicFrame(uint32_t id, const Payload &data, uint8_t dlc)
+void FlexCan::UpdateCyclicFrame(uint32_t id, const Payload &data)
 {
 }
 

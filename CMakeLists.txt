@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.25)
 
 
 project(KeCommon LANGUAGES CXX C)
@@ -13,7 +13,7 @@ add_library(KeCommon
         Bsw/DeviceDrivers/SPI/LpSpi/LpSpi.cpp
         Bsw/DeviceDrivers/Tle9461/Tle9461.cpp
         Bsw/DeviceDrivers/UART/LpUart/LpUart.cpp
-        )
+)
 if (${MCU} MATCHES MKE16)
     target_sources(KeCommon
             PRIVATE
@@ -65,7 +65,7 @@ target_compile_definitions(KeCommon
         __USE_CMSIS
         NDEBUG
         __NEWLIB__
-        )
+)
 
 target_compile_options(KeCommon PRIVATE
         -O0 -fno-common -g3 -Wall -c -ffunction-sections -fdata-sections -ffreestanding
