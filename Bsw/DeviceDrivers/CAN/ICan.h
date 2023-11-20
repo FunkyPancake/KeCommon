@@ -30,8 +30,9 @@ namespace KeCommon::Bsw::Can
         virtual bool Send(uint32_t id, const Payload &data, uint8_t dlc) = 0;
         virtual bool Send(const CanFrame &frame) = 0;
 
-        virtual bool Receive(uint32_t *id, Payload *data, uint8_t dlc) = 0;
-        virtual bool Receive(CanFrame &frame) = 0;
+        virtual bool ReadFrame(uint32_t *id, Payload *data, uint8_t dlc) = 0;
+
+        virtual bool ReadFrame(CanFrame &frame) = 0;
 
         virtual bool
         RegisterRxFrame(uint32_t id, const std::function<void(const KeCommon::Bsw::Can::CanFrame &frame)> &handler) = 0;

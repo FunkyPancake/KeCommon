@@ -6,66 +6,86 @@
  */
 #include "LpSpi.h"
 
-bool LpSpiRtos::Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len)
+LpSpiRtos::LpSpiRtos(lpspi_rtos_handle_t *handle, CsPin csPin, bool reverseByteOrder) : _handle{handle}
 {
-    lpspi_transfer_t data = {tx_data, rx_data, len, kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous};
-    return LPSPI_RTOS_Transfer(this->handle, &data) == kStatus_Success;
-}
+    _flags = MapCs(csPin);
+    if(reverseByteOrder){
+        _flags|= kLPSPI_MasterByteSwap;
+    }
 
-LpSpiRtos::LpSpiRtos(lpspi_rtos_handle_t *handle)
-{
-    this->flags = 0;
-    this->handle = handle;
 }
 
 LpSpiRtos::~LpSpiRtos()
 {
-    LPSPI_RTOS_Deinit(this->handle);
+    LPSPI_RTOS_Deinit(this->_handle);
 }
 
-void LpSpiRtos::SetFlags(uint32_t flags)
+bool LpSpiRtos::Transfer(const uint8_t *txData, uint8_t *rxData, uint8_t len) const
 {
-    this->flags = flags;
+    lpspi_transfer_t data = {const_cast<uint8_t *>(txData), rxData, len,
+                             _flags};
+    return LPSPI_RTOS_Transfer(this->_handle, &data) == kStatus_Success;
 }
 
-std::vector<uint8_t> LpSpiRtos::ReadBytes(uint16_t size)
+std::vector<uint8_t> LpSpiRtos::readBytes(uint16_t size)
 {
-    uint8_t txbuf[size];
-    uint8_t rxbuf[size];
+    uint8_t txBuf[size];
+    uint8_t rxBuf[size];
     lpspi_transfer_t spiData = {
-        reinterpret_cast<uint8_t *>(&txbuf),
-        reinterpret_cast<uint8_t *>(&rxbuf),
-        static_cast<size_t>(size),
-        kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous
+            reinterpret_cast<uint8_t *>(&txBuf),
+            reinterpret_cast<uint8_t *>(&rxBuf),
+            static_cast<size_t>(size),
+            _flags
     };
-    if (LPSPI_RTOS_Transfer(this->handle, &spiData) == kStatus_Success)
+    if (LPSPI_RTOS_Transfer(this->_handle, &spiData) == kStatus_Success)
     {
         std::vector<uint8_t> rData(size, 0);
         for (int i = 0; i < size; i++)
         {
-            rData[i] = rxbuf[i];
+            rData[i] = rxBuf[i];
         }
         return rData;
-    }
-    else
+    } else
     {
         return std::vector<uint8_t>{};
     }
 }
 
-bool LpSpiRtos::WriteBytes(const std::vector<uint8_t>& data)
+bool LpSpiRtos::writeBytes(const std::vector<uint8_t> &data)
 {
     size_t len = data.size();
-    uint8_t txbuf[len];
-    uint8_t rxbuf[len];
+    uint8_t txBuf[len];
+    uint8_t rxBuf[len];
     lpspi_transfer_t spiData = {
-        reinterpret_cast<uint8_t *>(&txbuf),
-        reinterpret_cast<uint8_t *>(&rxbuf),
-        len,
-        kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous
+            reinterpret_cast<uint8_t *>(&txBuf),
+            reinterpret_cast<uint8_t *>(&rxBuf),
+            len,
+            _flags
     };
-    return LPSPI_RTOS_Transfer(this->handle, &spiData) == kStatus_Success;
+    return LPSPI_RTOS_Transfer(this->_handle, &spiData) == kStatus_Success;
 }
-void LpSpiRtos::SetBaudrate(uint32_t baudrate){
-    (void)baudrate;
+
+void LpSpiRtos::setBaudrate(uint32_t baudrate)
+{
+    (void) baudrate;
+}
+
+uint32_t LpSpiRtos::MapCs(const ISpi::CsPin cs)
+{
+    uint32_t flags = kLPSPI_MasterPcsContinuous;
+    switch (cs)
+    {
+        case CsPin::Cs0:
+            flags |= kLPSPI_MasterPcs0;
+            break;
+        case CsPin::Cs1:
+            flags |= kLPSPI_MasterPcs1;
+            break;
+        case CsPin::Cs2:
+            flags |= kLPSPI_MasterPcs2;
+            break;
+        case CsPin::NoCs:
+            break;
+    }
+    return flags;
 }

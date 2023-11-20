@@ -14,8 +14,8 @@ private:
     uint32_t _baseClock;
 public:
     LpUart(lpuart_rtos_handle_t* handle, lpuart_rtos_config_t *config);
-    std::vector<uint8_t> ReadBytes(uint16_t size) override;
-    bool WriteBytes(const std::vector<uint8_t>& data)override;
-    void SetBaudrate(uint32_t baudrate) override;
+    std::vector<uint8_t> readBytes(uint16_t size) override;
+    bool writeBytes(const std::vector<uint8_t>& data)override;
+    void setBaudrate(uint32_t baudrate) override;
 };
 

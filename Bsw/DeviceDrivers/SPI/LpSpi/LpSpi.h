@@ -16,9 +16,9 @@
 class LpSpiRtos : public ISpi
 {
 private:
-    lpspi_rtos_handle_t *handle;
-    uint32_t flags;
-public:
+    lpspi_rtos_handle_t *_handle;
+    uint32_t _flags;
+    static uint32_t MapCs(ISpi::CsPin cs) ;
     enum LpSpiFlags
     {
         Pcs0 = kLPSPI_MasterPcs0,
@@ -28,13 +28,13 @@ public:
         CsContinuous = kLPSPI_MasterPcsContinuous,
         ByteSwap = kLPSPI_MasterByteSwap
     };
-    
-    bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len) override;
-    std::vector<uint8_t> ReadBytes(uint16_t size) override;
-    bool WriteBytes(const std::vector<uint8_t>& data) override;
-    explicit LpSpiRtos(lpspi_rtos_handle_t *handle);
-    void SetFlags(uint32_t flags);
-    void SetBaudrate(uint32_t baudrate) override;
-    ~LpSpiRtos();
+public:
+
+    explicit LpSpiRtos(lpspi_rtos_handle_t *handle, CsPin csPin, bool reverseByteOrder);
+    virtual ~LpSpiRtos();
+    bool Transfer(const uint8_t *txData, uint8_t *rxData, uint8_t len) const override;
+    std::vector<uint8_t> readBytes(uint16_t size) override;
+    bool writeBytes(const std::vector<uint8_t>& data) override;
+    void setBaudrate(uint32_t baudrate) override;
 };
 

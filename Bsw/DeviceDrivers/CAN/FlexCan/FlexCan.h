@@ -13,6 +13,7 @@
 #include "fsl_flexcan.h"
 #include "semphr.h"
 #include <map>
+#include <set>
 
 namespace KeCommon::Bsw::Can {
     class FlexCan : public ICan {
@@ -29,8 +30,8 @@ namespace KeCommon::Bsw::Can {
 
         static void WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc);
 
-        std::map<uint8_t, std::function<void(KeCommon::Bsw::Can::CanFrame frame)>> _registeredRxMb;
-        std::map<uint32_t, TxFrameEntry> _cyclicTxList;
+        std::unordered_map<uint8_t, std::function<void(KeCommon::Bsw::Can::CanFrame frame)>> _registeredRxMb;
+        std::unordered_map<uint32_t, TxFrameEntry> _cyclicTxList;
 
         static CanFrame ToICanFrame(const _flexcan_frame &frame);
 
@@ -47,9 +48,9 @@ namespace KeCommon::Bsw::Can {
 
         bool Send(const CanFrame &frame) override;
 
-        bool Receive(uint32_t *id, Payload *data, uint8_t dlc) override;
+        bool ReadFrame(uint32_t *id, Payload *data, uint8_t dlc) override;
 
-        bool Receive(CanFrame &frame) override;
+        bool ReadFrame(CanFrame &frame) override;
 
         bool UpdateCyclicFrame(uint32_t id, const Payload &data) override;
 
@@ -59,6 +60,9 @@ namespace KeCommon::Bsw::Can {
 
         void TxTask() override;
 
+        bool RegisterRxFrame(uint32_t id);
+
+        uint32_t _lastUsedTxMb{0};
     };
 }// namespace KeCommon::Bsw::Can
 

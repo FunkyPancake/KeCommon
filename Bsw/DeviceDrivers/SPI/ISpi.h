@@ -13,5 +13,11 @@
 class ISpi :public ICom
 {
 public:
-    virtual bool Transfer(uint8_t *tx_data, uint8_t *rx_data, uint8_t len) = 0;
+    enum class CsPin{
+        Cs0,
+        Cs1,
+        Cs2,
+        NoCs,
+    };
+    virtual bool Transfer(const uint8_t *txData, uint8_t *rxData, uint8_t len) const = 0;
 };

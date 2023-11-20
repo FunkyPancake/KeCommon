@@ -16,4 +16,7 @@ target_include_directories(
         PUBLIC
         Calibration
         DeviceDrivers
+        DeviceDrivers
+        Utils
 )
+add_subdirectory(Utils/PidController)

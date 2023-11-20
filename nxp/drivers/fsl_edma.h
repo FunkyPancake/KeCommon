@@ -114,7 +114,7 @@ enum
     kEDMA_SourceAddressErrorFlag      = DMA_ES_SAE_MASK, /*!< Source address not aligned with source size*/
     kEDMA_ErrorChannelFlag            = DMA_ES_ERRCHN_MASK, /*!< Error channel number of the cancelled channel number */
     kEDMA_ChannelPriorityErrorFlag    = DMA_ES_CPE_MASK,    /*!< Channel priority is not unique. */
-    kEDMA_TransferCanceledFlag        = DMA_ES_ECX_MASK,    /*!< Transfer cancelled */
+    kEDMA_TransferCanceledFlag        = DMA_ES_ECX_MASK,    /*!< transfer cancelled */
 #if defined(FSL_FEATURE_EDMA_CHANNEL_GROUP_COUNT) && (FSL_FEATURE_EDMA_CHANNEL_GROUP_COUNT > 1)
     kEDMA_GroupPriorityErrorFlag = DMA_ES_GPE_MASK, /*!< Group priority is not unique. */
 #endif
@@ -132,10 +132,10 @@ typedef enum _edma_interrupt_enable
 /*! @brief eDMA transfer type */
 typedef enum _edma_transfer_type
 {
-    kEDMA_MemoryToMemory = 0x0U,  /*!< Transfer from memory to memory */
-    kEDMA_PeripheralToMemory,     /*!< Transfer from peripheral to memory */
-    kEDMA_MemoryToPeripheral,     /*!< Transfer from memory to peripheral */
-    kEDMA_PeripheralToPeripheral, /*!< Transfer from Peripheral to peripheral */
+    kEDMA_MemoryToMemory = 0x0U,  /*!< transfer from memory to memory */
+    kEDMA_PeripheralToMemory,     /*!< transfer from peripheral to memory */
+    kEDMA_MemoryToPeripheral,     /*!< transfer from memory to peripheral */
+    kEDMA_PeripheralToPeripheral, /*!< transfer from Peripheral to peripheral */
 } edma_transfer_type_t;
 
 /*! @brief _edma_transfer_status eDMA transfer status */
@@ -629,7 +629,7 @@ void EDMA_TcdDisableInterrupts(edma_tcd_t *tcd, uint32_t mask);
 
 /*! @} */
 /*!
- * @name eDMA Channel Transfer Operation
+ * @name eDMA Channel transfer Operation
  * @{
  */
 

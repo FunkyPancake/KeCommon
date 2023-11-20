@@ -12,7 +12,7 @@ using namespace KeCommon::Bsw::Diag;
 
 void CanTp::ProcessFrame(const CanFrame &frame)
 {
-    auto frameType = frame.payload.b[0] >> 4;
+    const auto frameType = frame.payload.b[0] >> 4;
     if (frameType == 0) {
         ProcessSingleFrame(frame);
     }

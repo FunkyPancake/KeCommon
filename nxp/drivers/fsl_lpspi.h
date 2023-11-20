@@ -55,7 +55,7 @@ enum _lpspi_flags
     kLPSPI_RxDataReadyFlag      = LPSPI_SR_RDF_MASK, /*!< Receive data flag */
     kLPSPI_WordCompleteFlag     = LPSPI_SR_WCF_MASK, /*!< Word Complete flag */
     kLPSPI_FrameCompleteFlag    = LPSPI_SR_FCF_MASK, /*!< Frame Complete flag */
-    kLPSPI_TransferCompleteFlag = LPSPI_SR_TCF_MASK, /*!< Transfer Complete flag */
+    kLPSPI_TransferCompleteFlag = LPSPI_SR_TCF_MASK, /*!< transfer Complete flag */
     kLPSPI_TransmitErrorFlag    = LPSPI_SR_TEF_MASK, /*!< Transmit Error flag (FIFO underrun) */
     kLPSPI_ReceiveErrorFlag     = LPSPI_SR_REF_MASK, /*!< Receive Error flag (FIFO overrun) */
     kLPSPI_DataMatchFlag        = LPSPI_SR_DMF_MASK, /*!< Data Match flag */
@@ -72,7 +72,7 @@ enum _lpspi_interrupt_enable
     kLPSPI_RxInterruptEnable               = LPSPI_IER_RDIE_MASK, /*!< Receive data interrupt enable */
     kLPSPI_WordCompleteInterruptEnable     = LPSPI_IER_WCIE_MASK, /*!< Word complete interrupt enable */
     kLPSPI_FrameCompleteInterruptEnable    = LPSPI_IER_FCIE_MASK, /*!< Frame complete interrupt enable */
-    kLPSPI_TransferCompleteInterruptEnable = LPSPI_IER_TCIE_MASK, /*!< Transfer complete interrupt enable */
+    kLPSPI_TransferCompleteInterruptEnable = LPSPI_IER_TCIE_MASK, /*!< transfer complete interrupt enable */
     kLPSPI_TransmitErrorInterruptEnable    = LPSPI_IER_TEIE_MASK, /*!< Transmit error interrupt enable(FIFO underrun)*/
     kLPSPI_ReceiveErrorInterruptEnable     = LPSPI_IER_REIE_MASK, /*!< Receive Error interrupt enable (FIFO overrun) */
     kLPSPI_DataMatchInterruptEnable        = LPSPI_IER_DMIE_MASK, /*!< Data Match interrupt enable */
@@ -253,8 +253,8 @@ enum _lpspi_transfer_config_flag_for_slave
 enum _lpspi_transfer_state
 {
     kLPSPI_Idle = 0x0U, /*!< Nothing in the transmitter/receiver. */
-    kLPSPI_Busy,        /*!< Transfer queue is not finished. */
-    kLPSPI_Error        /*!< Transfer error. */
+    kLPSPI_Busy,        /*!< transfer queue is not finished. */
+    kLPSPI_Error        /*!< transfer error. */
 };
 
 /*! @brief LPSPI master configuration structure.*/
@@ -342,9 +342,9 @@ typedef struct _lpspi_transfer
 {
     uint8_t *txData;          /*!< Send buffer. */
     uint8_t *rxData;          /*!< Receive buffer. */
-    volatile size_t dataSize; /*!< Transfer bytes. */
+    volatile size_t dataSize; /*!< transfer bytes. */
 
-    uint32_t configFlags; /*!< Transfer transfer configuration flags. Set from _lpspi_transfer_config_flag_for_master if
+    uint32_t configFlags; /*!< transfer transfer configuration flags. Set from _lpspi_transfer_config_flag_for_master if
                              the transfer is used for master or _lpspi_transfer_config_flag_for_slave enumeration if the
                              transfer is used for slave.*/
 } lpspi_transfer_t;
