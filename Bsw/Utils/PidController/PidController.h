@@ -7,6 +7,7 @@
 
 #ifndef PID_CONTROLLER_H_
 #define PID_CONTROLLER_H_
+#include <type_traits>
 
 namespace KeCommon::Utils {
 	template <class T> class PidController
@@ -14,8 +15,15 @@ namespace KeCommon::Utils {
 	private:
 		T p,i,d,iterm;
 	public:
-		explicit PidController();
-		void Reset();
+		explicit PidController()
+		{
+			static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>);
+
+		}
+		void Reset()
+		{
+			iterm = 0;
+		}
 		void SetTarget(const T& target);
 		T ControlLoop(const T& input);
 	};
