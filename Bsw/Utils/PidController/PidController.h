@@ -7,6 +7,7 @@
 
 #ifndef PID_CONTROLLER_H_
 #define PID_CONTROLLER_H_
+#include <cmath>
 #include <type_traits>
 
 namespace KeCommon::Utils
@@ -46,7 +47,7 @@ namespace KeCommon::Utils
         float ControlLoop(const float &input)
         {
             const auto error = _target - input;
-            if (error < _config.DeadBand) {
+            if (std::abs(error) < _config.DeadBand) {
                 return _lastOutput;
             }
 
