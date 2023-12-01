@@ -998,11 +998,11 @@ uint32_t CLOCK_GetSysPllMultDiv(uint32_t refFreq, uint32_t desireFreq, uint8_t *
  *                                            .div1 = kSCG_AsyncClkDivBy1,
  *                                            .div2 = kSCG_AsyncClkDisable,
  *                                            .div3 = kSCG_AsyncClkDivBy2,
- *                                            .source = kSCG_SysPllSrcFirc,
+ *                                            .src = kSCG_SysPllSrcFirc,
  *                                            .isBypassSelected = false,
  *                                            .isPfdSelected = false,
  *                                            .prediv = 5U,
- *                                            .pfdClkout = kSCG_AuxPllPfd0Clk, ; only
+ *                                            .pfdClkout = kSCG_AuxPllPfd0Clk,
  * needed for initialization .mult = 20U, .pllPostdiv1 = kSCG_SysClkDivBy3, .pllPostdiv2 = kSCG_SysClkDivBy4};
  * CLOCK_InitSysPll(&g_scgSysPllConfig);
  * endcode

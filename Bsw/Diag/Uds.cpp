@@ -3,6 +3,10 @@
 //
 
 #include "Uds.h"
+extern "C" {
+#include "../Bootloader/Bootloader.h"
+};
+
 #include "UdsErrorCode.h"
 using namespace KeCommon::Bsw::Diag;
 using namespace KeCommon::Bsw::Diag::Internal;
@@ -30,6 +34,7 @@ bool Uds::SessionControl(const std::vector<uint8_t> &command)
             break;
         case 0x02:
             //ToDo JumpToFbl
+            JumpToBootloader();
             break;
         case 0x03:
         default:
@@ -63,7 +68,7 @@ void Uds::MainFunction()
             auto sid = (Internal::SId) command[0];
             if (auto search = _commandMap.find(sid); search != _commandMap.end()) {
                 auto handler = search->second;
-                auto result = (this->*handler)(command);
+                (this->*handler)(command);
             }
             else {
                 SendNegativeResponse(sid, Internal::ResponseCode::ServiceNotSupported);

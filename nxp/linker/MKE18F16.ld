@@ -2,15 +2,15 @@
  * GENERATED FILE - DO NOT EDIT
  * Copyright (c) 2008-2013 Code Red Technologies Ltd,
  * Copyright 2015, 2018-2019 NXP
- * (c) NXP Semiconductors 2013-2021
- * Generated linker script file for MKE16F256xxx16
+ * (c) NXP Semiconductors 2013-2023
+ * Generated linker script file for MKE18F512xxx16
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on May 2, 2021 11:38:33 PM
+ * MCUXpresso IDE v11.7.1 [Build 9221] [2023-03-28] on Jul 20, 2023, 9:53:28 PM
  */
 
-INCLUDE "Ke16F256_library.ld"
-INCLUDE "Ke16F256_memory.ld"
+INCLUDE "MKE18F16_library.ld"
+INCLUDE "MKE18F16_memory.ld"
 
 ENTRY(ResetISR)
 
@@ -64,11 +64,7 @@ SECTIONS
         PROVIDE(__FLASH_CONFIG_END__ = .) ;
         ASSERT(!(__FLASH_CONFIG_START__ == __FLASH_CONFIG_END__), "Linker Flash Config Support Enabled, but no .FlashConfig section provided within application");
         /* End of Kinetis Flash Configuration data */
-        
-    } > PROGRAM_FLASH
 
-    .text : ALIGN(8)
-    {
        *(.text*)
        KEEP(*freertos*/tasks.o(.rodata*)) /* FreeRTOS Debug Config */
        *(.rodata .rodata.* .constdata .constdata.*)
@@ -271,8 +267,8 @@ SECTIONS
     } > SRAM_UPPER AT> SRAM_UPPER
 
     /* Reserve and place Heap within memory map */
-    _HeapSize = 0x400;
-    .heap :  ALIGN(8)
+    _HeapSize = 0x800;
+    .heap (NOLOAD) :  ALIGN(8)
     {
         _pvHeapStart = .;
         . += _HeapSize;
@@ -280,14 +276,14 @@ SECTIONS
         _pvHeapLimit = .;
     } > SRAM_UPPER
 
-     _StackSize = 0x400;
+     _StackSize = 0x800;
      /* Reserve space in memory for Stack */
-    .heap2stackfill  :
+    .heap2stackfill (NOLOAD) :
     {
         . += _StackSize;
     } > SRAM_UPPER
     /* Locate actual Stack in memory map */
-    .stack ORIGIN(SRAM_UPPER) + LENGTH(SRAM_UPPER) - _StackSize - 0:  ALIGN(8)
+    .stack ORIGIN(SRAM_UPPER) + LENGTH(SRAM_UPPER) - _StackSize - 0 (NOLOAD) :  ALIGN(8)
     {
         _vStackBase = .;
         . = ALIGN(8);

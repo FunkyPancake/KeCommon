@@ -1,9 +1,9 @@
 /*
 ** ###################################################################
-**     Processors:          MKE16F256VLH16
-**                          MKE16F256VLL16
-**                          MKE16F512VLH16
-**                          MKE16F512VLL16
+**     Processors:          MKE18F256VLH16
+**                          MKE18F256VLL16
+**                          MKE18F512VLH16
+**                          MKE18F512VLL16
 **
 **     Compilers:           Freescale C/C++ for Embedded ARM
 **                          GNU C Compiler
@@ -43,18 +43,20 @@
 */
 
 /*!
- * @file MKE16F16
+ * @file MKE18F16
  * @version 4.0
  * @date 2016-09-20
- * @brief Device specific configuration file for MKE16F16 (implementation file)
+ * @brief Device specific configuration file for MKE18F16 (implementation file)
  *
  * Provides a system configuration function and a global variable that contains
  * the system frequency. It configures the device and initializes the oscillator
  * (PLL) that is part of the microcontroller device.
  */
 
-#include "fsl_device_registers.h"
 #include <stdint.h>
+#include "fsl_device_registers.h"
+
+
 
 /* ----------------------------------------------------------------------------
    -- Core clock

@@ -21,7 +21,7 @@ namespace KeCommon::Bsw::Can {
         uint32_t timestamp;
         uint32_t dlc;
         Payload payload;
-    } ICanFrame;
+    } CanFrame;
 }
 
 

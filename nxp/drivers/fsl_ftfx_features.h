@@ -44,7 +44,7 @@
 /*! @brief Flash Driver Export option */
 #if !defined(FTFx_DRIVER_IS_EXPORTED)
 #if defined(BL_TARGET_ROM)
-#define FTFx_DRIVER_IS_EXPORTED 1U /*!< Used for the ROM Bootloader. */
+#define FTFx_DRIVER_IS_EXPORTED 1U /*!< Used for the ROM bootloader. */
 #else
 #define FTFx_DRIVER_IS_EXPORTED 0U /*!< Used for the MCUXpresso SDK application. */
 #endif
