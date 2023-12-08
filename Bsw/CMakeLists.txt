@@ -9,13 +9,13 @@ target_sources(
         Diag/CanTp.cpp
         Diag/Uds.cpp
         Bootloader/Bootloader.c
+        DeviceDrivers/Tle9461/Tle9461.cpp
 )
 
 target_include_directories(
         ${TARGET_NAME}
         PUBLIC
         Calibration
-        DeviceDrivers
         DeviceDrivers
         Utils
 )

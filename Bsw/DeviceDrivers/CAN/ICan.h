@@ -20,9 +20,9 @@ namespace KeCommon::Bsw::Can
         template<typename T>
         static T SwapBytes(T data) {
             std::array<uint8_t, sizeof(T)> tmp{};
-            *(T *) tmp.data() = data;
+            *reinterpret_cast<T*>(tmp.data()) = data;
             std::reverse(tmp.begin(), tmp.end());
-            return *(T *) tmp.data();
+            return *reinterpret_cast<T*>(tmp.data());
         }
 
         virtual ~ICan() = default;
@@ -35,7 +35,7 @@ namespace KeCommon::Bsw::Can
         virtual bool ReadFrame(CanFrame &frame) = 0;
 
         virtual bool
-        RegisterRxFrame(uint32_t id, const std::function<void(const KeCommon::Bsw::Can::CanFrame &frame)> &handler) = 0;
+        RegisterRxFrame(uint32_t id, const std::function<void(const CanFrame&frame)> &handler) = 0;
 
         virtual void RegisterCyclicTxFrame(uint32_t id, uint8_t dlc, uint32_t cycleTime) = 0;
 

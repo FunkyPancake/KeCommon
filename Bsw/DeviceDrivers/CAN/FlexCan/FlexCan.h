@@ -12,49 +12,49 @@
 #include "FreeRTOS.h"
 #include "fsl_flexcan.h"
 #include "semphr.h"
-#include <map>
-#include <set>
 
-namespace KeCommon::Bsw::Can {
-    class FlexCan : public ICan {
+namespace KeCommon::Bsw::Can
+{
+    class FlexCan final : public ICan
+    {
     private:
-        struct TxFrameEntry {
+        struct TxFrameEntry
+        {
             uint16_t cnt;
             uint16_t reloadCnt;
             CanFrame frame;
         };
+
         static constexpr int MutexWaitTime = 100;
-        uint32_t _mailboxCount;
-        CAN_Type *_canBase;
-        SemaphoreHandle_t _mutex;
+        CAN_Type* canBase_;
+        const uint32_t mailboxCount_;
+        uint32_t mainFunctionPeriodMs_;
+        SemaphoreHandle_t mutex_;
+        std::unordered_map<uint8_t, std::function<void(CanFrame frame)>> registeredRxMb_{};
+        std::unordered_map<uint32_t, TxFrameEntry> cyclicTxList_{};
 
-        static void WritePayloadRegisters(flexcan_frame_t *frame, const uint8_t *data, uint8_t dlc);
-
-        std::unordered_map<uint8_t, std::function<void(KeCommon::Bsw::Can::CanFrame frame)>> _registeredRxMb;
-        std::unordered_map<uint32_t, TxFrameEntry> _cyclicTxList;
-
-        static CanFrame ToICanFrame(const _flexcan_frame &frame);
+        static void WritePayloadRegisters(flexcan_frame_t* frame, const uint8_t* data, uint8_t dlc);
+        static CanFrame ToICanFrame(const _flexcan_frame& frame);
 
     public:
-
-        explicit FlexCan(CAN_Type *canBase, int mailboxCount);
+        explicit FlexCan(CAN_Type* canBase, uint32_t mainFunctionPeriodMs, int mailboxCount);
 
         bool RegisterRxFrame(uint32_t id,
-                             const std::function<void(const KeCommon::Bsw::Can::CanFrame &frame)> &handler) override;
+                             const std::function<void(const KeCommon::Bsw::Can::CanFrame& frame)>& handler) override;
 
         void RegisterCyclicTxFrame(uint32_t id, uint8_t dlc, uint32_t cycleTime) override;
 
-        bool Send(uint32_t id, const Payload &data, uint8_t dlc) override;
+        bool Send(uint32_t id, const Payload& data, uint8_t dlc) override;
 
-        bool Send(const CanFrame &frame) override;
+        bool Send(const CanFrame& frame) override;
 
-        bool ReadFrame(uint32_t *id, Payload *data, uint8_t dlc) override;
+        bool ReadFrame(uint32_t* id, Payload* data, uint8_t dlc) override;
 
-        bool ReadFrame(CanFrame &frame) override;
+        bool ReadFrame(CanFrame& frame) override;
 
-        bool UpdateCyclicFrame(uint32_t id, const Payload &data) override;
+        bool UpdateCyclicFrame(uint32_t id, const Payload& data) override;
 
-        void UpdateCyclicFrame(const CanFrame &frame) override;
+        void UpdateCyclicFrame(const CanFrame& frame) override;
 
         void RxTask() override;
 
@@ -64,6 +64,6 @@ namespace KeCommon::Bsw::Can {
 
         uint32_t _lastUsedTxMb{0};
     };
-}// namespace KeCommon::Bsw::Can
+} // namespace KeCommon::Bsw::Can
 
 #endif /* CDD_CAN_IL_H_ */
