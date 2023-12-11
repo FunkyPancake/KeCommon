@@ -5,8 +5,8 @@
  *      Author: Mati
  */
 #include "LpSpi.h"
-
-LpSpiRtos::LpSpiRtos(lpspi_rtos_handle_t *handle, CsPin csPin, bool reverseByteOrder) : _handle{handle}
+#include  <cstring>
+LpSpiRtos::LpSpiRtos(lpspi_rtos_handle_t *handle, const CsPin csPin, const bool reverseByteOrder) : _handle{handle}
 {
     _flags = MapCs(csPin);
     if(reverseByteOrder){
@@ -20,14 +20,14 @@ LpSpiRtos::~LpSpiRtos()
     LPSPI_RTOS_Deinit(this->_handle);
 }
 
-bool LpSpiRtos::Transfer(const uint8_t *txData, uint8_t *rxData, uint8_t len) const
+bool LpSpiRtos::Transfer(const uint8_t *txData, uint8_t *rxData, const uint8_t len) const
 {
     lpspi_transfer_t data = {const_cast<uint8_t *>(txData), rxData, len,
                              _flags};
     return LPSPI_RTOS_Transfer(this->_handle, &data) == kStatus_Success;
 }
 
-std::vector<uint8_t> LpSpiRtos::readBytes(uint16_t size)
+std::vector<uint8_t> LpSpiRtos::readBytes(const uint16_t size)
 {
     uint8_t txBuf[size];
     uint8_t rxBuf[size];
@@ -39,25 +39,17 @@ std::vector<uint8_t> LpSpiRtos::readBytes(uint16_t size)
     };
     if (LPSPI_RTOS_Transfer(this->_handle, &spiData) == kStatus_Success)
     {
-        std::vector<uint8_t> rData(size, 0);
-        for (int i = 0; i < size; i++)
-        {
-            rData[i] = rxBuf[i];
-        }
-        return rData;
-    } else
-    {
-        return std::vector<uint8_t>{};
+        return {rxBuf, rxBuf+size};
     }
+    return std::vector<uint8_t>{};
 }
 
 bool LpSpiRtos::writeBytes(const std::vector<uint8_t> &data)
 {
-    size_t len = data.size();
-    uint8_t txBuf[len];
+    const size_t len = data.size();
     uint8_t rxBuf[len];
     lpspi_transfer_t spiData = {
-            reinterpret_cast<uint8_t *>(&txBuf),
+            const_cast<uint8_t*>(data.data()),
             reinterpret_cast<uint8_t *>(&rxBuf),
             len,
             _flags
@@ -65,7 +57,7 @@ bool LpSpiRtos::writeBytes(const std::vector<uint8_t> &data)
     return LPSPI_RTOS_Transfer(this->_handle, &spiData) == kStatus_Success;
 }
 
-void LpSpiRtos::setBaudrate(uint32_t baudrate)
+void LpSpiRtos::setBaudrate(const uint32_t baudrate)
 {
     (void) baudrate;
 }

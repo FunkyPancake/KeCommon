@@ -24,14 +24,20 @@ namespace KeCommon::Bsw::Can
             uint16_t reloadCnt;
             CanFrame frame;
         };
+        struct RxFrameEntry
+        {
+            std::function<void(CanFrame frame)> callback;
+            CanFrame frame;
+        };
 
         static constexpr int MutexWaitTime = 100;
         CAN_Type* canBase_;
         const uint32_t mailboxCount_;
         uint32_t mainFunctionPeriodMs_;
         SemaphoreHandle_t mutex_;
-        std::unordered_map<uint8_t, std::function<void(CanFrame frame)>> registeredRxMb_{};
+        std::unordered_map<uint8_t, RxFrameEntry> registeredRxMb_{};
         std::unordered_map<uint32_t, TxFrameEntry> cyclicTxList_{};
+        constexpr TickType_t mutexTimeout{100};
 
         static void WritePayloadRegisters(flexcan_frame_t* frame, const uint8_t* data, uint8_t dlc);
         static CanFrame ToICanFrame(const _flexcan_frame& frame);
