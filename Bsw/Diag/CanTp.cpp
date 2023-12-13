@@ -7,8 +7,8 @@
 #include <array>
 #include <cstring>
 
-using namespace KeCommon::Bsw::Can;
-using namespace KeCommon::Bsw::Diag;
+using namespace Communication::Can;
+using namespace Diag;
 
 void CanTp::ProcessFrame(const CanFrame &frame)
 {

@@ -8,8 +8,8 @@ extern "C" {
 };
 
 #include "UdsErrorCode.h"
-using namespace KeCommon::Bsw::Diag;
-using namespace KeCommon::Bsw::Diag::Internal;
+using namespace Diag;
+using namespace Diag::Internal;
 
 Uds::Uds(const IDoXTp *iDoxTp)
     : _doXTp(const_cast<IDoXTp *>(iDoxTp)), _connected(false), _busy(false),

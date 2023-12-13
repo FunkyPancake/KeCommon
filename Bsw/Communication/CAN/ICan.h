@@ -12,7 +12,7 @@
 #include <functional>
 #include <memory>
 
-namespace KeCommon::Bsw::Can
+namespace Communication::Can
 {
     class ICan
     {
@@ -30,7 +30,7 @@ namespace KeCommon::Bsw::Can
         virtual bool Send(uint32_t id, const Payload &data, uint8_t dlc) = 0;
         virtual bool Send(const CanFrame &frame) = 0;
 
-        virtual bool ReadFrame(uint32_t *id, Payload *data, uint8_t dlc) = 0;
+        virtual bool ReadFrame(uint32_t& id, Payload& data, uint8_t& dlc) = 0;
 
         virtual bool ReadFrame(CanFrame &frame) = 0;
 

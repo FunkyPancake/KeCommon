@@ -7,11 +7,6 @@ project(KeCommon LANGUAGES CXX C)
 add_library(KeCommon
         nxp/source/semihost_hardfault.c
         nxp/source/cpp_config.cpp
-        Bsw/DeviceDrivers/CAN/FlexCan/FlexCan.cpp
-        Bsw/DeviceDrivers/SPI/LpSpi/LpSpi.cpp
-        Bsw/DeviceDrivers/Tle9xxx/Tle9xxx.cpp
-        Bsw/DeviceDrivers/UART/LpUart/LpUart.cpp
-        Bsw/DeviceDrivers/Tle9104/Tle9104.cpp
 )
 if (${MCU} MATCHES MKE16)
     target_sources(KeCommon
@@ -27,25 +22,13 @@ endif ()
 target_include_directories(
         KeCommon
         PUBLIC
-        Bsw/Interfaces
         nxp/device
         nxp/CMSIS
         nxp/source
-        Bsw/DeviceDrivers/CAN/FlexCan
-        Bsw/DeviceDrivers/SPI/LpSpi
-        Bsw/DeviceDrivers/Tle9xxx
-        Bsw/DeviceDrivers/UART/LpUart
         Interfaces
         nxp/device
         nxp/CMSIS
         nxp/source
-        DeviceDrivers/FlexCan
-        DeviceDrivers/LpSpi
-        DeviceDrivers/Tle9xxx
-        DeviceDrivers/Tle9104
-        DeviceDrivers/LpUart
-        Bsw/Utils/MapLookup
-        Bsw/Utils/Calibration
 )
 
 add_subdirectory(nxp/drivers)

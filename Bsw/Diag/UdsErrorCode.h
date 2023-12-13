@@ -4,7 +4,7 @@
 
 #ifndef UDSERRORCODE_H
 #define UDSERRORCODE_H
-namespace KeCommon::Bsw::Diag::Internal{
+namespace Diag::Internal{
     enum class ResponseCode{
         Ok,
         GeneralReject = 0x10,

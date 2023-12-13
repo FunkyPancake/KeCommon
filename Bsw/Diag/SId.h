@@ -4,7 +4,7 @@
 
 #ifndef COMMANDID_H
 #define COMMANDID_H
-namespace KeCommon::Bsw::Diag::Internal
+namespace Diag::Internal
 {
     enum class SId
     {
@@ -24,5 +24,5 @@ namespace KeCommon::Bsw::Diag::Internal
     enum class ReadMemoryByIdIdents{
         SoftwareVersion = 0x1010,
     };
-}// namespace KeCommon::Bsw::Diag::Internal
+}// namespace Diag::Internal
 #endif//COMMANDID_H

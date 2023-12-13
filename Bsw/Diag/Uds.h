@@ -8,7 +8,7 @@
 #include "SId.h"
 #include "UdsErrorCode.h"
 #include <map>
-namespace KeCommon::Bsw::Diag
+namespace Diag
 {
 
     class Uds

@@ -7,7 +7,7 @@
 #include "FlexCan.h"
 #include <functional>
 
-using namespace KeCommon::Bsw::Can;
+using namespace Communication::Can;
 
 FlexCan::FlexCan(CAN_Type* canBase, const uint32_t mainFunctionPeriodMs, const int mailboxCount): canBase_(canBase),
     mailboxCount_(mailboxCount), mainFunctionPeriodMs_(mainFunctionPeriodMs)
@@ -110,14 +110,13 @@ bool FlexCan::Send(const CanFrame& frame)
     return Send(frame.id, frame.payload, frame.dlc);
 }
 
-bool FlexCan::ReadFrame(uint32_t* id, Payload* data, uint8_t *dlc)
+bool FlexCan::ReadFrame(uint32_t& id, Payload& data, uint8_t& dlc)
 {
-    if(CanFrame frame{}; ReadFrame(frame))
+    if (CanFrame frame{}; ReadFrame(frame))
     {
-
-        *id = frame.id;
-        *data = frame.payload;
-        *dlc = frame.dlc;
+        id = frame.id;
+        data = frame.payload;
+        dlc = frame.dlc;
         return true;
     }
     return false;

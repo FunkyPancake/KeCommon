@@ -13,7 +13,7 @@
 #include "fsl_flexcan.h"
 #include "semphr.h"
 
-namespace KeCommon::Bsw::Can
+namespace Communication::Can
 {
     class FlexCan final : public ICan
     {
@@ -37,7 +37,7 @@ namespace KeCommon::Bsw::Can
         SemaphoreHandle_t mutex_;
         std::unordered_map<uint8_t, RxFrameEntry> registeredRxMb_{};
         std::unordered_map<uint32_t, TxFrameEntry> cyclicTxList_{};
-        constexpr TickType_t mutexTimeout{100};
+        static constexpr TickType_t mutexTimeout{100};
 
         static void WritePayloadRegisters(flexcan_frame_t* frame, const uint8_t* data, uint8_t dlc);
         static CanFrame ToICanFrame(const _flexcan_frame& frame);
@@ -46,7 +46,7 @@ namespace KeCommon::Bsw::Can
         explicit FlexCan(CAN_Type* canBase, uint32_t mainFunctionPeriodMs, int mailboxCount);
 
         bool RegisterRxFrame(uint32_t id,
-                             const std::function<void(const KeCommon::Bsw::Can::CanFrame& frame)>& handler) override;
+                             const std::function<void(const CanFrame& frame)>& handler) override;
 
         void RegisterCyclicTxFrame(uint32_t id, uint8_t dlc, uint32_t cycleTime) override;
 
@@ -54,7 +54,7 @@ namespace KeCommon::Bsw::Can
 
         bool Send(const CanFrame& frame) override;
 
-        bool ReadFrame(uint32_t* id, Payload* data, uint8_t dlc) override;
+        bool ReadFrame(uint32_t& id, Payload& data, uint8_t& dlc) override;
 
         bool ReadFrame(CanFrame& frame) override;
 
