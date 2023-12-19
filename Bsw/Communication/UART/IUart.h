@@ -8,6 +8,7 @@ namespace Communication::Uart
 {
     class IUart : public ICom
     {
+    public:
         virtual void setBaudrate(uint32_t baudrate) =0;
     };
 }

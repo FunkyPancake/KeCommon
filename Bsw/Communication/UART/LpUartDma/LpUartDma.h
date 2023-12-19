@@ -15,6 +15,7 @@ namespace Communication::Uart
     class LpUartDma final : public IUart
     {
     private:
+        uint32_t Clock = 12000000UL;
         enum TransferState:EventBits_t
         {
             Complete = 0x01,
@@ -26,14 +27,14 @@ namespace Communication::Uart
                              status_t status,
                              void* userData);
 
-        const LPUART_Type* base_;
+        LPUART_Type *base_;
         lpuart_edma_handle_t* handle_;
-        uint32_t baseClock_;
+        uint32_t timeout_;
         EventGroupHandle_t rxEvent_;
         EventGroupHandle_t txEvent_;
 
     public:
-        explicit LpUartDma(LPUART_Type* base, lpuart_edma_handle_t* handle);
+        explicit LpUartDma(LPUART_Type* base, lpuart_edma_handle_t* handle, uint32_t timeout);
         ~LpUartDma() override;
         bool readBytes(uint16_t size, std::vector<uint8_t>& data) override;
         bool writeBytes(const std::vector<uint8_t>& data) override;
