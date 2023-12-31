@@ -146,7 +146,7 @@ void FLEXCAN_PrepareTransfConfiguration(CAN_Type *base,
 }
 
 /*!
- * brief Start Transfer Data from the FLEXCAN Legacy Rx FIFO using eDMA.
+ * brief Start transfer Data from the FLEXCAN Legacy Rx FIFO using eDMA.
  *
  * This function to Update edma transfer confiugration and Start eDMA transfer
  *

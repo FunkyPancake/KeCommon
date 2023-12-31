@@ -8,8 +8,8 @@ extern "C" {
 };
 
 #include "UdsErrorCode.h"
-using namespace KeCommon::Bsw::Diag;
-using namespace KeCommon::Bsw::Diag::Internal;
+using namespace Diag;
+using namespace Diag::Internal;
 
 Uds::Uds(const IDoXTp *iDoxTp)
     : _doXTp(const_cast<IDoXTp *>(iDoxTp)), _connected(false), _busy(false),
@@ -26,8 +26,7 @@ bool Uds::SessionControl(const std::vector<uint8_t> &command)
         SendNegativeResponse(static_cast<SId>(command[0]), Internal::ResponseCode::IncorrectMessageLenOrFormat);
         return false;
     }
-    auto subFun = command[1];
-    switch (subFun) {
+    switch (const auto subFun = command[1]) {
         case 0x01:
             //TODO: Set session to basic session
             SendPosRespShortSubFunc(static_cast<SId>(command[0]), subFun);
@@ -65,9 +64,9 @@ void Uds::MainFunction()
     if (!_busy) {
         if (_doXTp->RxRdy()) {
             auto command = _doXTp->Read();
-            auto sid = (Internal::SId) command[0];
-            if (auto search = _commandMap.find(sid); search != _commandMap.end()) {
-                auto handler = search->second;
+            const auto sid = static_cast<SId>(command[0]);
+            if (const auto search = _commandMap.find(sid); search != _commandMap.end()) {
+                const auto handler = search->second;
                 (this->*handler)(command);
             }
             else {

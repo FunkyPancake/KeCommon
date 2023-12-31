@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-namespace KeCommon::Bsw::Can {
+namespace Communication::Can {
     constexpr uint32_t CanIdExtBit = 0x80000000;
 
     typedef union {

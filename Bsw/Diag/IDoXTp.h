@@ -7,7 +7,7 @@
 #include "cstdint"
 #include "vector"
 
-namespace KeCommon::Bsw::Diag
+namespace Diag
 {
     class IDoXTp
     {
