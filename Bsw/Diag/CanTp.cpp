@@ -29,8 +29,8 @@ void CanTp::ProcessFrame(const CanFrame &frame)
 
 void CanTp::ProcessSingleFrame(const CanFrame &frame)
 {
-    auto len = frame.payload.b[0];
-    std::memcpy(_rxBuf.data(), (frame.payload.b + 1), len);
+    const auto len = frame.payload.b[0];
+    std::memcpy(_rxBuf.data(), frame.payload.b + 1, len);
     _rxBufPtr = len;
     _rxRdy = true;
 }
@@ -48,10 +48,10 @@ void CanTp::ProcessFlowControlFrame(const CanFrame &frame)
 }
 
 CanTp::CanTp(ICan &can)
-    : _can(can), _txId(DiagCanTxId)
+    : _can(can), _txId(DiagCanTxId), _rxId(DiagCanRxId)
 {
     auto f = [this](auto &&PH1) { ProcessFrame(std::forward<decltype(PH1)>(PH1)); };
-    can.RegisterRxFrame(DiagCanRxId, f);
+    can.RegisterRxFrame(_rxId, f);
 }
 
 void CanTp::TxMainFunction()
@@ -121,7 +121,7 @@ bool CanTp::Write(std::vector<uint8_t> &data)
 
 std::vector<uint8_t> CanTp::Read()
 {
-    auto response = std::vector<uint8_t>(_rxBuf.begin(), _rxBuf.begin() + _rxBufPtr);
+    auto response = std::vector(_rxBuf.begin(), _rxBuf.begin() + _rxBufPtr);
     _rxBufPtr = 0;
     _rxRdy = false;
     return response;

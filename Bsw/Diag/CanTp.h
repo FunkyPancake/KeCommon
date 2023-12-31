@@ -34,7 +34,7 @@ namespace Diag
         static constexpr uint8_t FrameDlc = 8;
         static constexpr uint32_t MaxPayloadSizeFrame = FrameDlc - 1;
         static constexpr uint32_t MaxPayloadSizeFirstFrame = FrameDlc - 2;
-        static constexpr uint32_t bufSize = 128;
+        static constexpr uint32_t bufSize = 512;
         static constexpr uint8_t FillByte = 0x55;
         Communication::Can::ICan &_can;
         uint32_t _txId;
@@ -47,6 +47,7 @@ namespace Diag
         std::array<uint8_t, bufSize> _rxBuf{};
         bool _rxRdy{false};
         uint32_t _rxBufPtr{0};
+        uint32_t _rxId;
 
         void ProcessSingleFrame(const Communication::Can::CanFrame &frame);
 
