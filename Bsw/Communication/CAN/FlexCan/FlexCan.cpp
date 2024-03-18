@@ -76,33 +76,40 @@ void FlexCan::RegisterCyclicTxFrame(const uint32_t id, const uint8_t dlc, const 
 
 bool FlexCan::Send(const uint32_t id, const Payload& data, const uint8_t dlc)
 {
-    flexcan_frame_t frame = {.type = kFLEXCAN_FrameTypeData};
-    frame.length = dlc;
+    bool retVal = false;
+    if (xSemaphoreTake(mutex_, mutexTimeout) == pdTRUE)
+    {
+        flexcan_frame_t frame = {.type = kFLEXCAN_FrameTypeData};
+        frame.length = dlc;
 
-    if ((id & CanIdExtBit) == CanIdExtBit)
-    {
-        frame.id = id & 0x7fffffff;
-        frame.format = kFLEXCAN_FrameFormatExtend;
-    }
-    else
-    {
-        frame.id = (id & 0x7ff) << 18;
-        frame.format = kFLEXCAN_FrameFormatStandard;
-    }
+        if ((id & CanIdExtBit) == CanIdExtBit)
+        {
+            frame.id = id & 0x7fffffff;
+            frame.format = kFLEXCAN_FrameFormatExtend;
+        }
+        else
+        {
+            frame.id = (id & 0x7ff) << 18;
+            frame.format = kFLEXCAN_FrameFormatStandard;
+        }
 
-    WritePayloadRegisters(&frame, data.b, dlc);
-    for (; _lastUsedTxMb < mailboxCount_; _lastUsedTxMb++)
-    {
-        const auto result = FLEXCAN_WriteTxMb(canBase_, _lastUsedTxMb, &frame);
-        if (result == kStatus_Success)
-            return true;
-    }
+        WritePayloadRegisters(&frame, data.b, dlc);
+        for (; _lastUsedTxMb < mailboxCount_; _lastUsedTxMb++)
+        {
+            if (const auto result = FLEXCAN_WriteTxMb(canBase_, _lastUsedTxMb, &frame); result == kStatus_Success)
+            {
+                retVal = true;
+                break;
+            }
+        }
 
-    if (_lastUsedTxMb >= mailboxCount_)
-    {
-        _lastUsedTxMb = registeredRxMb_.size();
+        if (_lastUsedTxMb >= mailboxCount_)
+        {
+            _lastUsedTxMb = registeredRxMb_.size();
+        }
+        xSemaphoreGive(mutex_);
     }
-    return false;
+    return retVal;
 }
 
 bool FlexCan::Send(const CanFrame& frame)
@@ -134,14 +141,14 @@ bool FlexCan::ReadFrame(CanFrame& frame)
 
 bool FlexCan::UpdateCyclicFrame(const uint32_t id, const Payload& data)
 {
-    if (cyclicTxList_.find(id) != cyclicTxList_.end())
+    if (xSemaphoreTake(mutex_, mutexTimeout) == pdTRUE)
     {
-        if (xSemaphoreTake(mutex_, mutexTimeout) == pdTRUE)
+        if (cyclicTxList_.find(id) != cyclicTxList_.end())
         {
             cyclicTxList_[id].frame.payload = data;
-            xSemaphoreGive(mutex_);
             return true;
         }
+        xSemaphoreGive(mutex_);
     }
     return false;
 }
@@ -171,29 +178,25 @@ void FlexCan::RxTask()
 
 void FlexCan::TxTask()
 {
-    CanFrame frame;
-    for (auto& [id, frameEntry] : cyclicTxList_)
+    if (xSemaphoreTake(mutex_, mutexTimeout) == pdTRUE)
     {
-        if (xSemaphoreTake(mutex_, mutexTimeout) == pdTRUE)
+        for (auto& [id, frameEntry] : cyclicTxList_)
         {
-            frame = frameEntry.frame;
-            xSemaphoreGive(mutex_);
-        }
-        else
-        {
-            return;
-        }
-        if (frameEntry.cnt <= 0)
-        {
-            if (Send(frame))
+            CanFrame frame = frameEntry.frame;
+
+            if (frameEntry.cnt <= 0)
             {
-                //reload only if sending was successful
-                frameEntry.cnt = frameEntry.reloadCnt;
+                if (Send(frame))
+                {
+                    //reload only if sending was successful
+                    frameEntry.cnt = frameEntry.reloadCnt;
+                }
             }
-        }
-        else
-        {
-            frameEntry.cnt--;
+            else
+            {
+                frameEntry.cnt--;
+            }
+            xSemaphoreGive(mutex_);
         }
     }
 }

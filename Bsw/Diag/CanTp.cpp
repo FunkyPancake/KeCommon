@@ -10,6 +10,13 @@
 using namespace Communication::Can;
 using namespace Diag;
 
+CanTp::CanTp(ICan *can)
+    : _can(can), _txId(DiagCanTxId), _txBuf(), _rxBuf(),_rxId(DiagCanRxId)
+{
+    auto f = [this](const CanFrame& canFrame) { ProcessFrame(canFrame); };
+    can->RegisterRxFrame(_rxId, f);
+}
+
 void CanTp::ProcessFrame(const CanFrame &frame)
 {
     const auto frameType = frame.payload.b[0] >> 4;
@@ -47,13 +54,6 @@ void CanTp::ProcessFlowControlFrame(const CanFrame &frame)
 {
 }
 
-CanTp::CanTp(ICan &can)
-    : _can(can), _txId(DiagCanTxId), _rxId(DiagCanRxId)
-{
-    auto f = [this](auto &&PH1) { ProcessFrame(std::forward<decltype(PH1)>(PH1)); };
-    can.RegisterRxFrame(_rxId, f);
-}
-
 void CanTp::TxMainFunction()
 {
     if (_txMsgLen == 0) {
@@ -89,7 +89,7 @@ void CanTp::TxMainFunction()
         memcpy(&(payload.b[1]), _txBuf.data() + _txBufPtr, size);
         _txBufPtr += size;
     }
-    _can.Send(_txId, payload, FrameDlc);
+    _can->Send(_txId, payload, FrameDlc);
     if (_txBufPtr >= _txMsgLen) {
         _txMsgLen = 0;
         _txBufPtr = 0;
