@@ -50,7 +50,7 @@ target_compile_options(KeCommon PRIVATE
         -fno-exceptions -fmerge-constants -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
         -mthumb -fstack-usage -specs=nano.specs)
 
-if(${DSP} MATCHES TRUE)
+if(DEFINED DSP)
     #Download and build new CMSIS DSP library, since nxp provides obsolete version
     set(CMSISCORE ${CMAKE_CURRENT_SOURCE_DIR}/nxp/CMSIS)
     include(FetchContent)
@@ -60,7 +60,6 @@ if(${DSP} MATCHES TRUE)
     )
     FetchContent_MakeAvailable(CMSIS_DSP)
     add_definitions(-DARM_MATH_CM4)
-    message(${cmsis_dsp_SOURCE_DIR})
 
     add_subdirectory(${cmsis_dsp_SOURCE_DIR}/Source bin_dsp)
     target_compile_options(CMSISDSP PRIVATE -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -ffunction-sections -fdata-sections
@@ -68,6 +67,5 @@ if(${DSP} MATCHES TRUE)
             -fshort-enums -mfloat-abi=hard)
     target_include_directories(KeCommon PUBLIC ${cmsis_dsp_SOURCE_DIR}/Include)
     target_link_libraries(KeCommon CMSISDSP)
-    message("DEBUG")
 
 endif ()
